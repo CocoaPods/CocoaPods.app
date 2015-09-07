@@ -12,9 +12,12 @@
 
 + (void)load;
 {
-  Method m1 = class_getInstanceMethod(self, @selector(rangeForUserCompletion));
-  Method m2 = class_getInstanceMethod(self, @selector(CP_rangeForUserCompletion));
-  method_exchangeImplementations(m1, m2);
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    Method m1 = class_getInstanceMethod(self, @selector(rangeForUserCompletion));
+    Method m2 = class_getInstanceMethod(self, @selector(CP_rangeForUserCompletion));
+    method_exchangeImplementations(m1, m2);
+  });
 }
 
 -(NSRange)CP_rangeForUserCompletion;
