@@ -1,9 +1,11 @@
 #import "CPAppDelegate.h"
 #import "CPCLIToolInstallationController.h"
+#import "CPSplashWindowController.h"
 
 NSString * const kCPCLIToolSuggestedDestination = @"/usr/local/bin/pod";
 
 @interface CPAppDelegate ()
+@property (nonatomic, strong, readonly) CPSplashWindowController *splashWindowController;
 @end
 
 @implementation CPAppDelegate
@@ -18,8 +20,9 @@ NSString * const kCPCLIToolSuggestedDestination = @"/usr/local/bin/pod";
   //[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CPShowVerboseCommandOutput"];
   //NSLog(@"%@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
 #endif
-  
-  [[self CLIToolInstallationController] installBinstubIfNecessary];
+
+  _splashWindowController = [[CPSplashWindowController alloc] initWithWindowNibName:@"CPSplashWindowController"];
+  [self.splashWindowController showWindow:self];
 }
 
 #pragma mark - Actions

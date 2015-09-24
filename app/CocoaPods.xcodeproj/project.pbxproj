@@ -27,6 +27,9 @@
 		51D2E5B21A212A0800C0B153 /* SyntaxDefinitions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51D2E5B01A212A0800C0B153 /* SyntaxDefinitions.plist */; };
 		60FE01671B9B7AA70027EEE3 /* SMLTextView+CocoaPods.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FE01661B9B7AA70027EEE3 /* SMLTextView+CocoaPods.m */; };
 		60FE01701B9B7F1E0027EEE3 /* SUUpdater+DebugMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FE016F1B9B7F1E0027EEE3 /* SUUpdater+DebugMode.m */; };
+		60FE01741B9B90890027EEE3 /* CPSplashWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FE01721B9B90890027EEE3 /* CPSplashWindowController.m */; };
+		60FE01751B9B90890027EEE3 /* CPSplashWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 60FE01731B9B90890027EEE3 /* CPSplashWindowController.xib */; };
+		60FE017B1B9B9D7B0027EEE3 /* CPSplashRecentDocumentsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FE017A1B9B9D7B0027EEE3 /* CPSplashRecentDocumentsController.m */; };
 		770382F41A2035B400435285 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 770382F31A2035B400435285 /* Localizable.strings */; };
 		77356D751A2253F1002822CF /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77356D741A2253F1002822CF /* Media.xcassets */; };
 /* End PBXBuildFile section */
@@ -89,6 +92,11 @@
 		51D2E5B01A212A0800C0B153 /* SyntaxDefinitions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SyntaxDefinitions.plist; sourceTree = "<group>"; };
 		60FE01661B9B7AA70027EEE3 /* SMLTextView+CocoaPods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SMLTextView+CocoaPods.m"; sourceTree = "<group>"; };
 		60FE016F1B9B7F1E0027EEE3 /* SUUpdater+DebugMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SUUpdater+DebugMode.m"; sourceTree = "<group>"; };
+		60FE01711B9B90890027EEE3 /* CPSplashWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPSplashWindowController.h; sourceTree = "<group>"; };
+		60FE01721B9B90890027EEE3 /* CPSplashWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPSplashWindowController.m; sourceTree = "<group>"; };
+		60FE01731B9B90890027EEE3 /* CPSplashWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CPSplashWindowController.xib; sourceTree = "<group>"; };
+		60FE01791B9B9D7B0027EEE3 /* CPSplashRecentDocumentsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPSplashRecentDocumentsController.h; sourceTree = "<group>"; };
+		60FE017A1B9B9D7B0027EEE3 /* CPSplashRecentDocumentsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPSplashRecentDocumentsController.m; sourceTree = "<group>"; };
 		770382F31A2035B400435285 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		77356D741A2253F1002822CF /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		8400280B1B98668A2331DC84 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -205,6 +213,11 @@
 			children = (
 				51C2188F1A20A8090066F071 /* CPCLIToolInstallationController.h */,
 				51C218901A20A8090066F071 /* CPCLIToolInstallationController.m */,
+				60FE01711B9B90890027EEE3 /* CPSplashWindowController.h */,
+				60FE01721B9B90890027EEE3 /* CPSplashWindowController.m */,
+				60FE01731B9B90890027EEE3 /* CPSplashWindowController.xib */,
+				60FE01791B9B9D7B0027EEE3 /* CPSplashRecentDocumentsController.h */,
+				60FE017A1B9B9D7B0027EEE3 /* CPSplashRecentDocumentsController.m */,
 			);
 			name = Splash;
 			sourceTree = "<group>";
@@ -328,6 +341,7 @@
 				51165E2D1A17AFF500DCFC94 /* MainMenu.xib in Resources */,
 				51D2E5B11A212A0800C0B153 /* Syntax Definitions in Resources */,
 				5180FE941AD2A51300314D61 /* LICENSE in Resources */,
+				60FE01751B9B90890027EEE3 /* CPSplashWindowController.xib in Resources */,
 				77356D751A2253F1002822CF /* Media.xcassets in Resources */,
 				51165E581A1B925300DCFC94 /* CPUserProject.xib in Resources */,
 			);
@@ -389,6 +403,8 @@
 			files = (
 				51165E281A17AFF500DCFC94 /* main.m in Sources */,
 				51C218911A20A8090066F071 /* CPCLIToolInstallationController.m in Sources */,
+				60FE01741B9B90890027EEE3 /* CPSplashWindowController.m in Sources */,
+				60FE017B1B9B9D7B0027EEE3 /* CPSplashRecentDocumentsController.m in Sources */,
 				60FE01701B9B7F1E0027EEE3 /* SUUpdater+DebugMode.m in Sources */,
 				51165E261A17AFF500DCFC94 /* CPAppDelegate.m in Sources */,
 				51165E571A1B925300DCFC94 /* CPUserProject.m in Sources */,
