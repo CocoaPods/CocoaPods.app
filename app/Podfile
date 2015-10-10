@@ -8,8 +8,6 @@ pod 'Fragaria', :podspec => 'Fragaria.podspec.json', :inhibit_warnings => true
 # Has 6 warnings about integer precision loss.
 pod 'ANSIEscapeHelper', :podspec => 'ANSIEscapeHelper.podspec', :inhibit_warnings => true
 
-pod 'Sparkle'
-
 post_install do |installer|
   # We don't need all of Fragaria's syntax definitions.
   script = installer.aggregate_targets.first.copy_resources_script_path
