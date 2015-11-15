@@ -2,7 +2,7 @@
 
 #import <Fragaria/Fragaria.h>
 #import <ANSIEscapeHelper/AMR_ANSIEscapeHelper.h>
-#import <CocoaPods_objc/CPPodfile.h>
+#import <CocoaPods_ObjC/CPPodfile.h>
 
 #import <objc/runtime.h>
 
