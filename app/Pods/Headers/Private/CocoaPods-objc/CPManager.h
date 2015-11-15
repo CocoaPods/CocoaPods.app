@@ -1,0 +1,1 @@
+../../../CocoaPods-objc/Classes/CPManager.h

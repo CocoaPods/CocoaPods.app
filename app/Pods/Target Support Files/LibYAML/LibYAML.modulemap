@@ -1,0 +1,6 @@
+framework module LibYAML {
+  umbrella header "LibYAML-umbrella.h"
+
+  export *
+  module * { export * }
+}

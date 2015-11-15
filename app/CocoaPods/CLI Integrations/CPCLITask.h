@@ -3,6 +3,8 @@
 @class CPCLITask;
 @protocol CPCLITaskDelegate <NSObject>
 
+@optional
+
 /**
  * Called when output is received and appended to the task's log.
  *
@@ -10,6 +12,13 @@
  * @param updatedOutput The string which contains all of the output for this task, including the newest appended part.
  */
 - (void)task:(CPCLITask *)task didUpdateOutputContents:(NSAttributedString *)updatedOutput;
+
+/**
+ *  Called when the task is finished.
+ *
+ *  @param output The string which contains all of the output for this task.
+ */
+- (void)taskDidFinish:(NSAttributedString *)output;
 
 @end
 
@@ -30,7 +39,7 @@
                    qualityOfService:(NSQualityOfService)qualityOfService;
 
 /**
- * Perform the task.
+ * Perform the task. This *must* be called on the main thread.
  */
 - (void)run;
 

@@ -1,0 +1,26 @@
+{
+  "name": "CocoaPods-objc",
+  "version": "0.39.0",
+  "summary": "Provides support for working with CocoaPods.",
+  "homepage": "https://github.com/CocoaPods/CocoaPods-objc",
+  "social_media_url": "https://twitter.com/CocoaPods",
+  "license": "MIT",
+  "authors": "The CocoaPods Team",
+  "source": {
+    "git": "https://github.com/CocoaPods/CocoaPods-objc.git",
+    "tag": "0.39.0"
+  },
+  "platforms": {
+    "osx": "10.8"
+  },
+  "source_files": "Classes/**/*.{h,m}",
+  "requires_arc": true,
+  "dependencies": {
+    "YAML-Framework": [
+
+    ],
+    "DSUnixTask": [
+      "~> 0.1.0"
+    ]
+  }
+}

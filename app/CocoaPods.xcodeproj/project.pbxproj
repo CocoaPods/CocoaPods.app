@@ -10,6 +10,7 @@
 		1F9177581BA27592006698C9 /* CPHomeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9177561BA27592006698C9 /* CPHomeWindowController.m */; };
 		1F91775A1BA27598006698C9 /* CPHomeWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F91775C1BA27598006698C9 /* CPHomeWindowController.xib */; };
 		1FFFBB0A1BA25486004A8D1E /* pod in Copy Helper Executables */ = {isa = PBXBuildFile; fileRef = 51165E481A17B2D200DCFC94 /* pod */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		29EB3F931BF7FFC100E7CFF7 /* CPPodfileIPCTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 29EB3F921BF7FFC100E7CFF7 /* CPPodfileIPCTask.m */; };
 		331188571BEBCB0F00272793 /* CPCLIToolInstallationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 331188561BEBCB0F00272793 /* CPCLIToolInstallationController.m */; };
 		3311885A1BEBCB4200272793 /* CPCLITask.m in Sources */ = {isa = PBXBuildFile; fileRef = 331188591BEBCB4200272793 /* CPCLITask.m */; };
 		51165E261A17AFF500DCFC94 /* CPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 51165E251A17AFF500DCFC94 /* CPAppDelegate.m */; };
@@ -76,6 +77,8 @@
 		1F9177551BA27592006698C9 /* CPHomeWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPHomeWindowController.h; sourceTree = "<group>"; };
 		1F9177561BA27592006698C9 /* CPHomeWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPHomeWindowController.m; sourceTree = "<group>"; };
 		1F91775B1BA27598006698C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CPHomeWindowController.xib; sourceTree = "<group>"; };
+		29EB3F911BF7FFC100E7CFF7 /* CPPodfileIPCTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPPodfileIPCTask.h; sourceTree = "<group>"; };
+		29EB3F921BF7FFC100E7CFF7 /* CPPodfileIPCTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPPodfileIPCTask.m; sourceTree = "<group>"; };
 		331188551BEBCB0F00272793 /* CPCLIToolInstallationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPCLIToolInstallationController.h; sourceTree = "<group>"; };
 		331188561BEBCB0F00272793 /* CPCLIToolInstallationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPCLIToolInstallationController.m; sourceTree = "<group>"; };
 		331188581BEBCB4200272793 /* CPCLITask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPCLITask.h; sourceTree = "<group>"; };
@@ -149,6 +152,8 @@
 				331188591BEBCB4200272793 /* CPCLITask.m */,
 				331188551BEBCB0F00272793 /* CPCLIToolInstallationController.h */,
 				331188561BEBCB0F00272793 /* CPCLIToolInstallationController.m */,
+				29EB3F911BF7FFC100E7CFF7 /* CPPodfileIPCTask.h */,
+				29EB3F921BF7FFC100E7CFF7 /* CPPodfileIPCTask.m */,
 			);
 			path = "CLI Integrations";
 			sourceTree = "<group>";
@@ -469,6 +474,7 @@
 				51165E571A1B925300DCFC94 /* CPUserProject.m in Sources */,
 				60FE01671B9B7AA70027EEE3 /* SMLTextView+CocoaPods.m in Sources */,
 				601F910D1BE63B8100AD22B1 /* CPExternalLinksHelper.m in Sources */,
+				29EB3F931BF7FFC100E7CFF7 /* CPPodfileIPCTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,6 +597,7 @@
 			baseConfigurationReference = CBE7AF19067EFC56753C3D79 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "CocoaPods/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -605,6 +612,7 @@
 			baseConfigurationReference = C511D44E7F9B7A0C0EEF51D0 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "CocoaPods/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

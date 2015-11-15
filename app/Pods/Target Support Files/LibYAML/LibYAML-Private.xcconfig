@@ -1,0 +1,7 @@
+#include "LibYAML.xcconfig"
+CODE_SIGN_IDENTITY = 
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/LibYAML" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Sparkle" "${PODS_ROOT}/Headers/Public/Sparkle/Sparkle"
+OTHER_CFLAGS = ${LIBYAML_OTHER_CFLAGS}
+PODS_ROOT = ${SRCROOT}
+SKIP_INSTALL = YES

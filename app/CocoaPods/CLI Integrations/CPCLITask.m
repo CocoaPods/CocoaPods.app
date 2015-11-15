@@ -51,7 +51,7 @@
 - (void)run
 {
   // Create an indetermine progress bar since we have no way to track it for now.
-  self.progress = [NSProgress discreteProgressWithTotalUnitCount:-1];
+//  self.progress = [NSProgress discreteProgressWithTotalUnitCount:-1];
 
   NSDictionary *environment = @{
                                 @"HOME": NSHomeDirectory(),
@@ -137,7 +137,9 @@
     self.output = attributedOutput;
   }
 
-  [self.delegate task:self didUpdateOutputContents:self.output];
+  if ([self.delegate respondsToSelector:@selector(task:didUpdateOutputContents:)]) {
+    [self.delegate task:self didUpdateOutputContents:self.output];
+  }
 }
 
 - (void)taskDidFinish
@@ -155,8 +157,12 @@
   self.task = nil;
 
   // Mark the task as complete.
-  self.progress.totalUnitCount = 1;
-  self.progress.completedUnitCount = 1;
+//  self.progress.totalUnitCount = 1;
+//  self.progress.completedUnitCount = 1;
+
+  if ([self.delegate respondsToSelector:@selector(taskDidFinish:)]) {
+    [self.delegate taskDidFinish:self.output];
+  }
 }
 
 #pragma mark - Utilities

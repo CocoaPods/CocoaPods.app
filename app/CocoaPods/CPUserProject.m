@@ -2,11 +2,13 @@
 
 #import <Fragaria/Fragaria.h>
 #import <ANSIEscapeHelper/AMR_ANSIEscapeHelper.h>
+#import <CocoaPods_objc/CPPodfile.h>
 
 #import <objc/runtime.h>
 
 #import "CPANSIEscapeHelper.h" 
 #import "CPCLITask.h"
+#import "CPPodfileIPCTask.h"
 
 // Hack SMLTextView to also consider the leading colon when completing words, which are all the
 // symbols that we support.
@@ -52,6 +54,9 @@ typedef NSInteger NSModalResponse;
 @property (strong) IBOutlet MGSFragariaView *editor;
 @property (strong) NSString *contents;
 @property (strong) CPCLITask *task;
+@property (strong) CPPodfileIPCTask *ipcTask;
+@property (nonatomic, strong) CPPodfile *podfile;
+
 @end
 
 @implementation CPUserProject
@@ -85,6 +90,12 @@ typedef NSInteger NSModalResponse;
              ofType:(NSString *)typeName
               error:(NSError **)outError;
 {
+  self.ipcTask = [[CPPodfileIPCTask alloc] initWithUserProject:self
+                                                    completion:^(CPPodfile *podfile) {
+                                                      self.podfile = podfile;
+                                                    }];
+  [self.ipcTask run];
+
   if ([[absoluteURL lastPathComponent] isEqualToString:@"Podfile"]) {
     self.contents = [NSString stringWithContentsOfURL:absoluteURL
                                              encoding:NSUTF8StringEncoding
@@ -93,6 +104,7 @@ typedef NSInteger NSModalResponse;
       return YES;
     }
   }
+
   return NO;
 }
 

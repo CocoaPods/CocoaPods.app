@@ -1,0 +1,1 @@
+../../../CocoaPods-objc/Classes/Models/Basic Models/CPSpecification.h
