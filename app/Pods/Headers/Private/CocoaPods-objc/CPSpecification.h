@@ -1,1 +1,1 @@
-../../../CocoaPods-objc/Classes/Models/Basic Models/CPSpecification.h
+../../../CocoaPods-ObjC/Classes/Models/Basic Models/CPSpecification.h

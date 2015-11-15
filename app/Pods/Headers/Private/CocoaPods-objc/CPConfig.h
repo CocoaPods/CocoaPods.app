@@ -1,1 +1,1 @@
-../../../CocoaPods-objc/Classes/CPConfig.h
+../../../CocoaPods-ObjC/Classes/CPConfig.h

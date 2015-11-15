@@ -53,7 +53,7 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods/ANSIEscapeHelper.framework'
-  install_framework 'Pods/CocoaPods_objc.framework'
+  install_framework 'Pods/CocoaPods_ObjC.framework'
   install_framework 'Pods/DSUnixTask.framework'
   install_framework 'Pods/Fragaria.framework'
   install_framework 'Pods/LibYAML.framework'
@@ -61,7 +61,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods/ANSIEscapeHelper.framework'
-  install_framework 'Pods/CocoaPods_objc.framework'
+  install_framework 'Pods/CocoaPods_ObjC.framework'
   install_framework 'Pods/DSUnixTask.framework'
   install_framework 'Pods/Fragaria.framework'
   install_framework 'Pods/LibYAML.framework'

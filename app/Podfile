@@ -11,7 +11,7 @@ pod 'ANSIEscapeHelper', :podspec => 'ANSIEscapeHelper.podspec', :inhibit_warning
 
 pod 'YAML-Framework', :podspec => 'YAML-Framework.podspec.json'
 
-pod 'CocoaPods-objc', :git => 'git@github.com:dbgrandi/CocoaPods-objc.git', :branch => "revitalize"
+pod 'CocoaPods-ObjC', :git => 'git@github.com:dbgrandi/CocoaPods-objc.git', :branch => "revitalize"
 
 pod 'Sparkle'
 

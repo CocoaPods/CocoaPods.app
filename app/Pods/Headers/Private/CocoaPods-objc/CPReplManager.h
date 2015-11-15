@@ -1,1 +1,1 @@
-../../../CocoaPods-objc/Classes/CPReplManager.h
+../../../CocoaPods-ObjC/Classes/CPReplManager.h

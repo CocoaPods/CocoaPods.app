@@ -77,7 +77,7 @@
 #pragma mark - Subclasses helpers
 //------------------------------------------------------------------------------
 
-NSNumber* CPCoherceToBoolean(id value) {
+NSNumber* CPCoerceToBoolean(id value) {
   if ([value isEqualTo:@"true"]) {
     return @true;
   } else {
@@ -85,7 +85,7 @@ NSNumber* CPCoherceToBoolean(id value) {
   }
 }
 
-NSArray* CPCoherceToArray(id value) {
+NSArray* CPCoerceToArray(id value) {
   if ([value isKindOfClass:[NSArray class]]) {
     return value;
   } else {
@@ -97,7 +97,7 @@ NSArray* CPCoherceToArray(id value) {
   }
 }
 
-NSDictionary* CPCoherceToDictionary(id value) {
+NSDictionary* CPCoerceToDictionary(id value) {
   if ([value isKindOfClass:[NSDictionary class]]) {
     return value;
   } else if ([value isKindOfClass:[NSArray class]]) {

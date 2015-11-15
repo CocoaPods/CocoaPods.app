@@ -56,16 +56,16 @@
  passed the object(s) are used as the keys pointing to NSNull as the keys carry
  information.
  */
-NSDictionary* CPCoherceToDictionary(id value);
+NSDictionary* CPCoerceToDictionary(id value);
 
 /**
  Wraps the given value to an array if needed.
 */
-NSArray* CPCoherceToArray(id value);
+NSArray* CPCoerceToArray(id value);
 
 /**
  Wraps the given value in a boolean NSNumber.
  */
-NSNumber* CPCoherceToBoolean(id value);
+NSNumber* CPCoerceToBoolean(id value);
 
 @end

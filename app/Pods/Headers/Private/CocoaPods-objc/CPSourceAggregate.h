@@ -1,1 +1,1 @@
-../../../CocoaPods-objc/Classes/Controllers/CPSourceAggregate.h
+../../../CocoaPods-ObjC/Classes/Controllers/CPSourceAggregate.h

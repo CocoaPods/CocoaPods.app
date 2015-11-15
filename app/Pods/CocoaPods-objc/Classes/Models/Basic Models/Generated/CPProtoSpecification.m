@@ -51,7 +51,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)xcconfig; {
   id value = [self backingStoreValueForKey:@"xcconfig"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setXcconfig:(NSDictionary*)xcconfig; {
@@ -84,7 +84,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)authors; {
   id value = [self backingStoreValueForKey:@"authors"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setAuthors:(NSDictionary*)authors; {
@@ -109,7 +109,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)license; {
   id value = [self backingStoreValueForKey:@"license"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setLicense:(NSDictionary*)license; {
@@ -126,7 +126,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)source; {
   id value = [self backingStoreValueForKey:@"source"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setSource:(NSDictionary*)source; {
@@ -151,7 +151,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)screenshots; {
   id value = [self backingStoreValueForKey:@"screenshots"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setScreenshots:(NSArray*)screenshots; {
@@ -193,7 +193,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)platforms; {
   id value = [self backingStoreValueForKey:@"platforms"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setPlatforms:(NSDictionary*)platforms; {
@@ -202,7 +202,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)dependencies; {
   id value = [self backingStoreValueForKey:@"dependencies"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setDependencies:(NSDictionary*)dependencies; {
@@ -219,7 +219,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)frameworks; {
   id value = [self backingStoreValueForKey:@"frameworks"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setFrameworks:(NSArray*)frameworks; {
@@ -228,7 +228,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)weakFrameworks; {
   id value = [self backingStoreValueForKey:@"weak_frameworks"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setWeakFrameworks:(NSArray*)weakFrameworks; {
@@ -237,7 +237,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)libraries; {
   id value = [self backingStoreValueForKey:@"libraries"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setLibraries:(NSArray*)libraries; {
@@ -246,7 +246,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)compilerFlags; {
   id value = [self backingStoreValueForKey:@"compiler_flags"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setCompilerFlags:(NSArray*)compilerFlags; {
@@ -255,7 +255,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)podTargetXcconfig; {
   id value = [self backingStoreValueForKey:@"pod_target_xcconfig"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setPodTargetXcconfig:(NSDictionary*)podTargetXcconfig; {
@@ -264,7 +264,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)userTargetXcconfig; {
   id value = [self backingStoreValueForKey:@"user_target_xcconfig"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setUserTargetXcconfig:(NSDictionary*)userTargetXcconfig; {
@@ -313,7 +313,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)sourceFiles; {
   id value = [self backingStoreValueForKey:@"source_files"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setSourceFiles:(NSArray*)sourceFiles; {
@@ -322,7 +322,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)publicHeaderFiles; {
   id value = [self backingStoreValueForKey:@"public_header_files"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setPublicHeaderFiles:(NSArray*)publicHeaderFiles; {
@@ -331,7 +331,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)privateHeaderFiles; {
   id value = [self backingStoreValueForKey:@"private_header_files"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setPrivateHeaderFiles:(NSArray*)privateHeaderFiles; {
@@ -340,7 +340,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)vendoredFrameworks; {
   id value = [self backingStoreValueForKey:@"vendored_frameworks"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setVendoredFrameworks:(NSArray*)vendoredFrameworks; {
@@ -349,7 +349,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)vendoredLibraries; {
   id value = [self backingStoreValueForKey:@"vendored_libraries"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setVendoredLibraries:(NSArray*)vendoredLibraries; {
@@ -358,7 +358,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSDictionary*)resourceBundles; {
   id value = [self backingStoreValueForKey:@"resource_bundles"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setResourceBundles:(NSDictionary*)resourceBundles; {
@@ -367,7 +367,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)resources; {
   id value = [self backingStoreValueForKey:@"resources"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setResources:(NSArray*)resources; {
@@ -376,7 +376,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)excludeFiles; {
   id value = [self backingStoreValueForKey:@"exclude_files"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setExcludeFiles:(NSArray*)excludeFiles; {
@@ -385,7 +385,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)preservePaths; {
   id value = [self backingStoreValueForKey:@"preserve_paths"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setPreservePaths:(NSArray*)preservePaths; {
@@ -402,7 +402,7 @@ NSString * const kCPSpecificationDefaultSubspecsAttributeKey = @"default_subspec
 
 - (NSArray*)defaultSubspecs; {
   id value = [self backingStoreValueForKey:@"default_subspecs"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setDefaultSubspecs:(NSArray*)defaultSubspecs; {

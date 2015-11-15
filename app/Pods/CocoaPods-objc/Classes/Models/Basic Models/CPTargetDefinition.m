@@ -24,7 +24,7 @@
 //------------------------------------------------------------------------------
 
 /**
- Convets the target definition to their object representation and stores them
+ Converts the target definition to their object representation and stores them
  in a mutable array. The information is removed from the backing store and
  merged back when needed.
  */
@@ -40,17 +40,9 @@
   [self setBackingStoreValue:nil forKey:kCPTargetDefinitionChildrenAttributeKey];
 
   NSArray *dependencyArrays = [self backingStoreValueForKey:kCPTargetDefinitionDependenciesAttributeKey];
-  NSMutableArray *dependencies = [NSMutableArray new];
+  NSMutableArray <CPDependency *>*dependencies = [NSMutableArray new];
   [dependencyArrays enumerateObjectsUsingBlock:^(id value, NSUInteger idx, BOOL *stop) {
-    NSString *name;
-    NSArray *requirements;
-    if ([value isKindOfClass:[NSString class]]) {
-      name = value;
-    } else {
-      name = [[value allKeys] objectAtIndex:0];
-      requirements = [[value allValues] objectAtIndex:0];
-      [dependencies addObject:[[CPDependency alloc] initWithName:name requirements:requirements]];
-    }
+      [dependencies addObject:[CPDependency fromYAMLValue:value]];
   }];
   [self setDependencies:dependencies];
   [self setBackingStoreValue:nil forKey:kCPTargetDefinitionDependenciesAttributeKey];
@@ -67,7 +59,7 @@
 
   NSMutableArray *dependencyArrays = [NSMutableArray new];
   [self.dependencies enumerateObjectsUsingBlock:^(CPDependency *dependency, NSUInteger idx, BOOL *stop) {
-    [dependencyArrays addObject:[dependency requirements]];
+    [dependencyArrays addObject:dependency.requirements];
   }];
   [self setBackingStoreValue:dependencyArrays forKey:kCPTargetDefinitionDependenciesAttributeKey];
 
@@ -88,7 +80,7 @@
   }
 }
 
-- (NSString*)depleymentTarget;
+- (NSString*)deploymentTarget;
 {
   id rawValue = [self backingStoreValueForKey:@"platform"];
   if ([rawValue isKindOfClass:[NSDictionary class]]) {

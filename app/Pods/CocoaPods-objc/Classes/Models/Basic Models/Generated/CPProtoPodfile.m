@@ -21,24 +21,29 @@ NSString * const kCPPodfileTargetDefinitionsAttributeKey = @"target_definitions"
   [self setBackingStoreValue:workspace forKey:@"workspace"];
 }
 
-- (NSString*)sources; {
-  return [self backingStoreValueForKey:@"sources"];
+- (NSArray*)sources; {
+  id value = [self backingStoreValueForKey:@"sources"];
+  return CPCoerceToArray(value);
 }
 
-- (void)setSources:(NSString*)sources; {
+- (void)setSources:(NSArray*)sources; {
   [self setBackingStoreValue:sources forKey:@"sources"];
 }
 
-- (NSString*)plugins; {
-  return [self backingStoreValueForKey:@"plugins"];
+- (NSArray*)plugins; {
+  id value = [self backingStoreValueForKey:@"plugins"];
+  return CPCoerceToArray(value);
 }
 
-- (void)setPlugins:(NSString*)plugins; {
+- (void)setPlugins:(NSArray*)plugins; {
   [self setBackingStoreValue:plugins forKey:@"plugins"];
 }
 
 - (BOOL)setArcCompatibilityFlag; {
   id value = [self backingStoreValueForKey:@"set_arc_compatibility_flag"];
+  if (!value) {
+    return YES;
+  }
   return [value boolValue];
 }
 
@@ -48,6 +53,9 @@ NSString * const kCPPodfileTargetDefinitionsAttributeKey = @"target_definitions"
 
 - (BOOL)generateBridgeSupport; {
   id value = [self backingStoreValueForKey:@"generate_bridge_support"];
+  if (!value) {
+    return YES;
+  }
   return [value boolValue];
 }
 
@@ -57,7 +65,7 @@ NSString * const kCPPodfileTargetDefinitionsAttributeKey = @"target_definitions"
 
 - (NSArray*)targetDefinitions; {
   id value = [self backingStoreValueForKey:@"target_definitions"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setTargetDefinitions:(NSArray*)targetDefinitions; {

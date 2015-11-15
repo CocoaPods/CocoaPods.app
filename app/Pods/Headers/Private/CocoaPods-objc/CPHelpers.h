@@ -1,1 +1,1 @@
-../../../CocoaPods-objc/Classes/CPHelpers.h
+../../../CocoaPods-ObjC/Classes/CPHelpers.h

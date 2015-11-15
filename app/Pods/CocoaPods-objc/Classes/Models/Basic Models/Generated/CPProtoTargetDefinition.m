@@ -38,7 +38,7 @@ NSString * const kCPTargetDefinitionUsesFrameworksAttributeKey = @"uses_framewor
 
 - (NSArray*)podspecs; {
   id value = [self backingStoreValueForKey:@"podspecs"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setPodspecs:(NSArray*)podspecs; {
@@ -88,7 +88,7 @@ NSString * const kCPTargetDefinitionUsesFrameworksAttributeKey = @"uses_framewor
 
 - (NSDictionary*)buildConfigurations; {
   id value = [self backingStoreValueForKey:@"build_configurations"];
-  return CPCoherceToDictionary(value);
+  return CPCoerceToDictionary(value);
 }
 
 - (void)setBuildConfigurations:(NSDictionary*)buildConfigurations; {
@@ -97,7 +97,7 @@ NSString * const kCPTargetDefinitionUsesFrameworksAttributeKey = @"uses_framewor
 
 - (NSArray*)dependencies; {
   id value = [self backingStoreValueForKey:@"dependencies"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setDependencies:(NSArray*)dependencies; {
@@ -106,7 +106,7 @@ NSString * const kCPTargetDefinitionUsesFrameworksAttributeKey = @"uses_framewor
 
 - (NSArray*)children; {
   id value = [self backingStoreValueForKey:@"children"];
-  return CPCoherceToArray(value);
+  return CPCoerceToArray(value);
 }
 
 - (void)setChildren:(NSArray*)children; {

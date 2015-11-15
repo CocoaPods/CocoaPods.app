@@ -16,8 +16,6 @@ extern NSString * const kCPTargetDefinitionDependenciesAttributeKey;
 extern NSString * const kCPTargetDefinitionChildrenAttributeKey;
 extern NSString * const kCPTargetDefinitionConfigurationPodWhitelistAttributeKey;
 extern NSString * const kCPTargetDefinitionUsesFrameworksAttributeKey;
-extern NSString * const kCPTargetDefinitionNameAttributeKey;
-extern NSString * const kCPTargetDefinitionLinkWithFirstTargetAttributeKey;
 
 @interface CPProtoTargetDefinition : CPDictionaryBackedObject
 

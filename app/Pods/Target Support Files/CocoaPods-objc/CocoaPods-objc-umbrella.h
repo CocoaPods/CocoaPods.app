@@ -19,6 +19,6 @@
 #import "CPSet.h"
 #import "CPVersion.h"
 
-FOUNDATION_EXPORT double CocoaPods_objcVersionNumber;
-FOUNDATION_EXPORT const unsigned char CocoaPods_objcVersionString[];
+FOUNDATION_EXPORT double CocoaPods_ObjCVersionNumber;
+FOUNDATION_EXPORT const unsigned char CocoaPods_ObjCVersionString[];
 

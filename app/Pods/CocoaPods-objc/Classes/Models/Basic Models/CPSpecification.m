@@ -8,7 +8,6 @@
 
 #import "CPSpecification.h"
 #import "CPDictionaryBackedObject+Private.h"
-#import <ObjectiveSugar.h>
 
 @interface CPSpecification ()
 @property (readwrite) NSMutableArray* targetDefinitions;

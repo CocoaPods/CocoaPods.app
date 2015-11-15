@@ -1,7 +1,7 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
-## CocoaPods-objc
+## CocoaPods-ObjC
 
 Copyright (c) 2013 Fabio Pelosin <fabiopelosin@gmail.com>
 

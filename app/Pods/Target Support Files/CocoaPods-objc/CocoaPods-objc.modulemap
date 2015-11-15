@@ -1,5 +1,5 @@
-framework module CocoaPods_objc {
-  umbrella header "CocoaPods-objc-umbrella.h"
+framework module CocoaPods_ObjC {
+  umbrella header "CocoaPods-ObjC-umbrella.h"
 
   export *
   module * { export * }

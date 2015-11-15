@@ -21,14 +21,14 @@ extern NSString * const kCPPodfileTargetDefinitionsAttributeKey;
 /**
   The sources attribute.
 */
-- (NSString*)sources;
-- (void)setSources:(NSString*)sources;
+- (NSArray*)sources;
+- (void)setSources:(NSArray*)sources;
 
 /**
   The plugins attribute.
 */
-- (NSString*)plugins;
-- (void)setPlugins:(NSString*)plugins;
+- (NSArray*)plugins;
+- (void)setPlugins:(NSArray*)plugins;
 
 /**
   The set_arc_compatibility_flag attribute.

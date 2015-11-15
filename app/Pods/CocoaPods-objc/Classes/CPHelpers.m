@@ -7,7 +7,7 @@
 //
 
 #import "CPHelpers.h"
-#import <YAMLSerialization.h>
+#import <YAML-Framework/YAMLSerialization.h>
 
 NSArray* CPDirsInPath(NSString* path) {
   NSMutableArray *result = [NSMutableArray new];

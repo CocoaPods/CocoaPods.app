@@ -1,5 +1,5 @@
 {
-  "name": "CocoaPods-objc",
+  "name": "CocoaPods-ObjC",
   "version": "0.39.0",
   "summary": "Provides support for working with CocoaPods.",
   "homepage": "https://github.com/CocoaPods/CocoaPods-objc",
@@ -22,5 +22,6 @@
     "DSUnixTask": [
       "~> 0.1.0"
     ]
-  }
+  },
+  "compiler_flags": "-Wno-non-modular-include-in-framework-module"
 }

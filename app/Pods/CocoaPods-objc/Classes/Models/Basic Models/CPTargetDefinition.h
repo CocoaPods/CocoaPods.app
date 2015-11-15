@@ -8,6 +8,8 @@
 
 #import "CPProtoTargetDefinition.h"
 
+@class CPDependency;
+
 /**
  A target definition describes a the dependencies of Pod library which can be
  linked with one or more user targets.
@@ -27,7 +29,7 @@
  The returned collection is mutable and clients can add, remove or sort target
  definitions.
  */
-@property (readonly) NSMutableArray* children;
+@property (readonly) NSMutableArray <CPTargetDefinition *>* children;
 
 /**
  The dependencies of this target definition.
@@ -35,7 +37,7 @@
  The returned collection is mutable and clients can add, remove or sort 
  dependencies.
  */
-@property (readonly) NSMutableArray* dependencies;
+@property (readonly) NSMutableArray <CPDependency *>* dependencies;
 
 /**
  The name of the platform with which this target definition should link with
@@ -46,7 +48,7 @@
 /**
  The deployment target whith which this target definition should link with.
  */
-- (NSString*)depleymentTarget;
+- (NSString*)deploymentTarget;
 
 /**
  Stores the platform and the deployment target for this library.
