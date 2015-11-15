@@ -9,6 +9,10 @@ pod 'Fragaria', :podspec => 'Fragaria.podspec.json', :inhibit_warnings => true
 # Has 6 warnings about integer precision loss.
 pod 'ANSIEscapeHelper', :podspec => 'ANSIEscapeHelper.podspec', :inhibit_warnings => true
 
+pod 'YAML-Framework', :podspec => 'YAML-Framework.podspec.json'
+
+pod 'CocoaPods-ObjC', :git => 'git@github.com:dbgrandi/CocoaPods-objc.git', :branch => "revitalize"
+
 pod 'Sparkle'
 
 post_install do |installer|

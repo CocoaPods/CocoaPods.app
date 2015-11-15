@@ -1,29 +1,64 @@
 PODS:
   - ANSIEscapeHelper (0.9.6)
+  - CocoaPods-ObjC (0.39.0):
+    - DSUnixTask (~> 0.1.0)
+    - YAML-Framework
+  - DSUnixTask (0.1.1):
+    - DSUnixTask/Core (= 0.1.1)
+    - DSUnixTask/XPCClient (= 0.1.1)
+    - DSUnixTask/XPCService (= 0.1.1)
+  - DSUnixTask/Core (0.1.1):
+    - DSUnixTask/Core/TaskManagers (= 0.1.1)
+    - DSUnixTask/Core/TaskRunner (= 0.1.1)
+    - DSUnixTask/Core/Tasks (= 0.1.1)
+  - DSUnixTask/Core/TaskManagers (0.1.1)
+  - DSUnixTask/Core/TaskRunner (0.1.1)
+  - DSUnixTask/Core/Tasks (0.1.1)
+  - DSUnixTask/XPCClient (0.1.1):
+    - DSUnixTask/Core
+  - DSUnixTask/XPCService (0.1.1):
+    - DSUnixTask/Core/TaskRunner
   - Fragaria (1.0.1):
     - Fragaria/unicode (= 1.0.1)
   - Fragaria/unicode (1.0.1)
+  - LibYAML (0.1.4)
   - Sparkle (1.9.0)
+  - YAML-Framework (0.0.2):
+    - LibYAML (~> 0.1.4)
 
 DEPENDENCIES:
   - ANSIEscapeHelper (from `ANSIEscapeHelper.podspec`)
+  - CocoaPods-ObjC (from `git@github.com:dbgrandi/CocoaPods-objc.git`, branch `revitalize`)
   - Fragaria (from `Fragaria.podspec.json`)
   - Sparkle
+  - YAML-Framework (from `YAML-Framework.podspec.json`)
 
 EXTERNAL SOURCES:
   ANSIEscapeHelper:
     :podspec: ANSIEscapeHelper.podspec
+  CocoaPods-ObjC:
+    :branch: revitalize
+    :git: git@github.com:dbgrandi/CocoaPods-objc.git
   Fragaria:
     :podspec: Fragaria.podspec.json
+  YAML-Framework:
+    :podspec: YAML-Framework.podspec.json
 
 CHECKOUT OPTIONS:
+  CocoaPods-ObjC:
+    :commit: 8caa57dc02ac400bf243648fe3985aecd6785faf
+    :git: git@github.com:dbgrandi/CocoaPods-objc.git
   Fragaria:
     :commit: 11ea9399cd01d061218a99a67b4e01a65eb07696
     :git: https://github.com/bitstadium/Fragaria.git
 
 SPEC CHECKSUMS:
   ANSIEscapeHelper: 1d57a8d7af5b9f9d3d48dcf9bf1726f42ab9b99d
+  CocoaPods-ObjC: bb4d1cfb1a8530f14b67ec3015f96b9b057b8f71
+  DSUnixTask: 44a0f06b704797041a92c6d4eab311f2adfb0255
   Fragaria: 1c6e242d591aaca2fd2a2d64b9d980c8c0b12a2f
+  LibYAML: 3af2c5adf3a40dff936d087aa6a77edc10036bc5
   Sparkle: 75bbbc5ab2d666f7f77c241afe7fd28364a8f9f7
+  YAML-Framework: 36f2c468be2f4a3380587ce155d4c27761dac731
 
-COCOAPODS: 0.39.0
+COCOAPODS: 0.38.2

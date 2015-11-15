@@ -1,0 +1,6 @@
+framework module YAML_Framework {
+  umbrella header "YAML-Framework-umbrella.h"
+
+  export *
+  module * { export * }
+}

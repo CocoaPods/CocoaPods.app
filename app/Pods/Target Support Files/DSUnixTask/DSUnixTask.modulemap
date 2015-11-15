@@ -1,0 +1,6 @@
+framework module DSUnixTask {
+  umbrella header "DSUnixTask-umbrella.h"
+
+  export *
+  module * { export * }
+}

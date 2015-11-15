@@ -1,0 +1,1 @@
+../../../DSUnixTask/Classes/Core/Tasks/DSUnixTask+ManagerInterface.h
