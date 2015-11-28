@@ -1,0 +1,13 @@
+osx_image: xcode7.1
+language: objective-c
+
+env:
+  global:
+    - LANG=en_US.UTF-8
+
+install:
+  - git submodule update --init
+  - rake app:prerequisites &> output.log
+
+script:
+  - rake bundle:test

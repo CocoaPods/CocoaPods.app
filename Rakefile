@@ -1,6 +1,6 @@
 RELEASE_PLATFORM = '10.11'
 
-DEPLOYMENT_TARGET = '10.9'
+DEPLOYMENT_TARGET = '10.10'
 DEPLOYMENT_TARGET_SDK = "MacOSX#{DEPLOYMENT_TARGET}.sdk"
 
 $build_started_at = Time.now
@@ -677,7 +677,7 @@ namespace :bundle do
     test_dir = 'tmp'
     rm_rf test_dir
     mkdir_p test_dir
-    cp 'Podfile', test_dir
+    cp 'testing/Podfile', test_dir
     sh "cd #{test_dir} && #{File.expand_path(installed_env_script)} pod install --no-integrate --verbose"
   end
 
