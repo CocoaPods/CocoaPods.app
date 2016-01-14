@@ -24,7 +24,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="665" height="490"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="665" height="490"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -189,7 +189,7 @@
                             <constraint firstItem="YAO-eB-e3O" firstAttribute="centerY" secondItem="09I-WM-Nv4" secondAttribute="centerY" id="xuX-lv-28J"/>
                         </constraints>
                     </customView>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8mn-Z8-QE9">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8mn-Z8-QE9">
                         <rect key="frame" x="363" y="25" width="50" height="19"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="0.38.2" id="J6B-uz-TYN">
                             <font key="font" size="16" name=".HelveticaNeueDeskInterface-Regular"/>
@@ -199,8 +199,10 @@
                     </textField>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="8mn-Z8-QE9" secondAttribute="bottom" constant="25" id="FyY-mM-hMz"/>
                     <constraint firstItem="09I-WM-Nv4" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="162" id="HK3-tO-Eun"/>
                     <constraint firstItem="09I-WM-Nv4" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="TmG-Y2-ZOc"/>
+                    <constraint firstItem="3Jq-7y-btG" firstAttribute="leading" secondItem="8mn-Z8-QE9" secondAttribute="trailing" constant="21" id="X7k-tX-KfD"/>
                     <constraint firstAttribute="trailing" secondItem="3Jq-7y-btG" secondAttribute="trailing" id="Y7a-a5-JXb"/>
                     <constraint firstItem="EzD-1M-8dC" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" id="iA7-Uv-qga"/>
                     <constraint firstAttribute="bottom" secondItem="3Jq-7y-btG" secondAttribute="bottom" id="jue-MZ-Be6"/>
