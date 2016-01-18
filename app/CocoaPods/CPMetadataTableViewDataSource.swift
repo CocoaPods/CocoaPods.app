@@ -1,5 +1,32 @@
 import Cocoa
 
+protocol XcodeProjectFlattenable {
+  func flattenForTargets(targets: [CPCocoaPodsTarget]) -> [AnyObject]
+}
+
+extension CPXcodeProject: XcodeProjectFlattenable {
+  func flattenForTargets(targets: [CPCocoaPodsTarget]) -> [AnyObject] {
+    return [self] + self.targets.flatMap { $0.flattenForTargets(targets) }
+  }
+}
+
+extension CPXcodeTarget: XcodeProjectFlattenable {
+  func flattenForTargets(targets: [CPCocoaPodsTarget]) -> [AnyObject] {
+    return [self] + cocoapodsTargets.flatMap { targetName -> [AnyObject] in
+      targets.filter { $0.name == targetName }.flatMap { $0.pods }
+    } + ["spacer"]
+  }
+}
+
+extension Array where Element : XcodeProjectFlattenable {
+  func flattenForTargets(targets: [CPCocoaPodsTarget]) -> [AnyObject] {
+    return flatMap { element -> [AnyObject] in
+      return (element as XcodeProjectFlattenable).flattenForTargets(targets)
+    }
+  }
+}
+
+
 class CPMetadataTableViewDataSource: NSObject, NSTableViewDataSource, NSTableViewDelegate {
 
   var flattenedXcodeProject: [AnyObject] = []
@@ -12,29 +39,10 @@ class CPMetadataTableViewDataSource: NSObject, NSTableViewDataSource, NSTableVie
     tableView.reloadData()
   }
 
-  // TODO: I bet someone could code-golf this pretty well
   private func flattenXcodeProjects(projects:[CPXcodeProject], targets:[CPCocoaPodsTarget]) -> [AnyObject] {
-    var flattenedObjects: [AnyObject] = []
-
-    for xcodeproject in projects {
-      flattenedObjects.append(xcodeproject)
-
-      for target in xcodeproject.targets {
-        flattenedObjects.append(target)
-
-        for targetName in target.cocoapodsTargets {
-          targets.filter { $0.name == targetName }.forEach { pod_target in
-            for pod in pod_target.pods {
-              flattenedObjects.append(pod)
-            }
-          }
-        }
-        flattenedObjects.append("spacer")
-      }
-    }
-    return flattenedObjects
+    return projects.flattenForTargets(targets)
   }
-
+  
   // Nothing is selectable except the buttons
   func tableView(tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
     return false
