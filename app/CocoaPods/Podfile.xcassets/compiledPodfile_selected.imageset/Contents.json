@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "iOS-Icon.png",
+      "filename" : "compiledPodfile_selected.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "iOS-Icon@2x.png",
+      "filename" : "compiledPodfile_selected@2x.png",
       "scale" : "2x"
     },
     {
