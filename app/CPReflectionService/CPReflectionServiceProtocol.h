@@ -14,4 +14,6 @@
 
 - (void)allPods:(void (^ _Nonnull)(NSArray<NSString *> * _Nullable pods, NSError * _Nullable error))reply;
 
+- (void)updateSpecRepos:(void (^ _Nonnull)(NSError * _Nullable error))reply;
+
 @end

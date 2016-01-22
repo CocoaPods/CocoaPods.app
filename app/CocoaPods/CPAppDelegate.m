@@ -32,6 +32,7 @@
 #endif
 
   [self startReflectionService];
+  [self updateSpecRepos];
 }
 
 - (void)startReflectionService;
@@ -41,6 +42,11 @@
   self.reflectionService.invalidationHandler = ^{ NSLog(@"ReflectionService invalidated."); };
   self.reflectionService.interruptionHandler = ^{ NSLog(@"ReflectionService interrupted."); };
   [self.reflectionService resume];
+}
+
+- (void)updateSpecRepos
+{
+  [self.reflectionService.remoteObjectProxy updateSpecRepos:^(NSError * _Nullable error) { }];
 }
 
 - (void)startURLService;
