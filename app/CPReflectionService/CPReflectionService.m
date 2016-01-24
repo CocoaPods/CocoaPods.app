@@ -61,4 +61,14 @@
   }];
 }
 
+- (void)updateSpecRepos:(void (^)(NSError * _Nullable))reply
+{
+  [RBObject performBlock:^{
+    [RBObjectFromString(@"Pod::App") update_spec_repos];
+    reply(nil);
+  } error:^(NSError * _Nonnull error) {
+    reply(error);
+  }];
+}
+
 @end

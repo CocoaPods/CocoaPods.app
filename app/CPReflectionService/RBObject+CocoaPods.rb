@@ -20,6 +20,7 @@ module Pod
       require 'cocoapods'
 
       require 'claide/command/plugin_manager'
+      require 'claide/argv'
       require 'claide/ansi'
       CLAide::ANSI.disabled = true
     end
@@ -63,6 +64,11 @@ module Pod
 
     def self.all_pods
       Pod::SourcesManager.aggregate.all_pods
+    end
+
+    def self.update_spec_repos
+      Pod::Command.new(CLAide::ARGV.new([])).ensure_master_spec_repo_exists!
+      Pod::SourcesManager.update()
     end
   end
 end
