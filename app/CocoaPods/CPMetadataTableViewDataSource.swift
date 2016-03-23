@@ -1,38 +1,79 @@
 import Cocoa
 
+protocol CPMetadataRepresentable: class {
+  var viewIdentifier: String { get }
+  var viewOwner: AnyObject? { get }
+  var rowHeight: CGFloat { get }
+}
+
+extension CPXcodeProject: CPMetadataRepresentable {
+  var viewIdentifier: String { return "xcodeproject_metadata" }
+  var viewOwner: AnyObject? { return self }
+  var rowHeight: CGFloat { return 120 }
+}
+
+extension CPXcodeTarget: CPMetadataRepresentable {
+  var viewIdentifier: String { return "target_metadata" }
+  var viewOwner: AnyObject? { return self }
+  var rowHeight: CGFloat { return 150 }
+}
+
+extension CPPod: CPMetadataRepresentable {
+  var viewIdentifier: String { return "pod_metadata" }
+  var viewOwner: AnyObject? { return self }
+  var rowHeight: CGFloat { return 30 }
+}
+
+class Spacer: NSObject, CPMetadataRepresentable {
+  var viewIdentifier: String { return "spacer" }
+  var viewOwner: AnyObject? { return nil }
+  var rowHeight: CGFloat { return 30 }
+}
+
+protocol CPMetadataExtractable {
+  func metadataForTargets(targets: [CPCocoaPodsTarget]) -> [CPMetadataRepresentable]
+}
+
+extension CPXcodeProject: CPMetadataExtractable {
+  func metadataForTargets(targets: [CPCocoaPodsTarget]) -> [CPMetadataRepresentable] {
+    return [self] + self.targets.flatMap { $0.metadataForTargets(targets) }
+  }
+}
+
+extension CPXcodeTarget: CPMetadataExtractable {
+  func metadataForTargets(targets: [CPCocoaPodsTarget]) -> [CPMetadataRepresentable] {
+    let pods = cocoapodsTargets.flatMap { targetName -> [CPMetadataRepresentable] in
+      targets.filter { $0.name == targetName }
+        .flatMap { $0.pods }
+        .map { $0 as CPMetadataRepresentable }
+    }
+    
+    return [self as CPMetadataRepresentable] + pods + [Spacer() as CPMetadataRepresentable]
+  }
+}
+
+extension Array where Element : CPMetadataExtractable {
+  func metadataForTargets(targets: [CPCocoaPodsTarget]) -> [CPMetadataRepresentable] {
+    return flatMap { element -> [CPMetadataRepresentable] in
+      return (element as CPMetadataExtractable).metadataForTargets(targets)
+    }
+  }
+}
+
 class CPMetadataTableViewDataSource: NSObject, NSTableViewDataSource, NSTableViewDelegate {
 
-  var flattenedXcodeProject: [AnyObject] = []
+  var projectMetadataEntries: [CPMetadataRepresentable] = [] {
+    didSet {
+      tableView.reloadData()
+    }
+  }
+  
   var plugins = ["No plugins"]
 
   @IBOutlet weak var tableView: NSTableView!
 
   func setXcodeProjects(projects:[CPXcodeProject], targets:[CPCocoaPodsTarget]) {
-    flattenedXcodeProject = flattenXcodeProjects(projects, targets:targets)
-    tableView.reloadData()
-  }
-
-  // TODO: I bet someone could code-golf this pretty well
-  private func flattenXcodeProjects(projects:[CPXcodeProject], targets:[CPCocoaPodsTarget]) -> [AnyObject] {
-    var flattenedObjects: [AnyObject] = []
-
-    for xcodeproject in projects {
-      flattenedObjects.append(xcodeproject)
-
-      for target in xcodeproject.targets {
-        flattenedObjects.append(target)
-
-        for targetName in target.cocoapodsTargets {
-          targets.filter { $0.name == targetName }.forEach { pod_target in
-            for pod in pod_target.pods {
-              flattenedObjects.append(pod)
-            }
-          }
-        }
-        flattenedObjects.append("spacer")
-      }
-    }
-    return flattenedObjects
+    projectMetadataEntries = projects.metadataForTargets(targets)
   }
 
   // Nothing is selectable except the buttons
@@ -41,49 +82,22 @@ class CPMetadataTableViewDataSource: NSObject, NSTableViewDataSource, NSTableVie
   }
 
   func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-    return flattenedXcodeProject.count
+    return projectMetadataEntries.count
   }
 
   // Allows the UI to be set up via bindings
   func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-    return flattenedXcodeProject[row]
+    return projectMetadataEntries[row]
   }
 
   func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-    let data = flattenedXcodeProject[row]
-    if let xcodeproj = data as? CPXcodeProject {
-      return tableView.makeViewWithIdentifier("xcodeproject_metadata", owner: xcodeproj)
-
-    } else if let target = data as? CPXcodeTarget {
-      return tableView.makeViewWithIdentifier("target_metadata", owner: target)
-
-    } else if let pod = data as? CPPod {
-      return tableView.makeViewWithIdentifier("pod_metadata", owner: pod)
-
-    } else if let _ = data as? NSString {
-      return tableView.makeViewWithIdentifier("spacer", owner: nil)
-    }
-
-    print("Should not have data unaccounted for in the flattened xcode project");
-    return nil
+    let data = projectMetadataEntries[row]
+    
+    return tableView.makeViewWithIdentifier(data.viewIdentifier,
+      owner: data.viewOwner)
   }
 
   func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-    let data = flattenedXcodeProject[row]
-    if let _ = data as? CPXcodeProject {
-      return 120
-
-    } else if let _ = data as? CPXcodeTarget {
-      return 150
-
-    } else if let _ = data as? CPPod {
-      return 30
-
-    // Spacer
-    } else if let _ = data as? NSString {
-      return 30
-    }
-
-    return 0
+    return projectMetadataEntries[row].rowHeight
   }
 }
