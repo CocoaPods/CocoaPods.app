@@ -567,9 +567,35 @@ end
 # CocoaPods Gems
 # ------------------------------------------------------------------------------
 
-installed_pod_bin = File.join(BUNDLE_DESTROOT, 'bin/pod')
+installed_pod_bin = File.join(BUNDLE_DESTROOT, 'bin', 'pod')
 file installed_pod_bin => rubygems_update_dir do
-  install_gem 'cocoapods', install_cocoapods_version
+  # Nuke existing bundler setup
+  execute "bundling", ["rm", "-rf", File.join(WORKBENCH_DIR, "ruby")]
+  execute "bundling", ["rm", "bundled-Gemfile.lock"] if File.exists? "bundled-Gemfile.lock"
+
+  # Grab the latest bundler and use our existing ruby setup to host it
+  execute "bundling", [BUNDLE_ENV, 'gem', 'install', 'bundler', '--verbose'].compact
+  bundler = File.join(BUNDLE_DESTROOT, 'bin', 'bundle')
+
+  # Let bundler grab all our dependencies
+  execute  "bundling", [ bundler, "install", "--gemfile", "bundled-Gemfile"]
+  #
+  # # Downloaded Gems include the file structure for the downloads
+  # # we have to build the .gem file before installing
+  # gemfiles_to_install = []
+  # Dir.glob(WORKBENCH_DIR + '/ruby/*/bundler/gems/*/*.gemspec').each do |gemspec|
+  #   Dir.chdir File.dirname(gemspec) do
+  #     execute "thing", [BUNDLE_ENV, 'gem', 'build', File.basename(gemspec)].compact
+  #   end
+  #   gemfiles_to_install << Dir.glob(File.dirname(gemspec) + "/*.gem").first
+  # end
+  #
+  # # Cached Gems are ones that don't come from a custom source
+  # Dir.glob(WORKBENCH_DIR + '/ruby/*/cache/*.gem').each do |gemspec|
+  #   gemfiles_to_install << gemspec
+  # end
+
+install_gem gemfiles_to_install.join " "
 end
 
 plugin = 'cocoapods-plugins-install'

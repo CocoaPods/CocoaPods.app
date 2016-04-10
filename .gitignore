@@ -15,4 +15,5 @@ DerivedData
 
 *.*-e
 app/CocoaPods/Ruby Integration/
+.bundle/
 homebrew_cask/
