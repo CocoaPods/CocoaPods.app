@@ -1,25 +1,55 @@
-"INSTALL_CLI_MESSAGE_TEXT" = "Do you wish to install the CocoaPods Command-Line Tool?";
-"INSTALL_CLI_INFORMATIVE_TEXT" = "If you wish to use CocoaPods from the Terminal, a “%@” tool can be installed which will allow you easy access to the CocoaPods installation contained inside this application.\n\nThis is not needed for the application to function normally and can always be installed at a later time by using the menu item found under the application menu.";
+"INSTALL_CLI_MESSAGE_TEXT" = "Do you want to install the CocoaPods Command-Line Tool?";
+"UPDATE_CLI_MESSAGE_TEXT" = "Do you want to update the CocoaPods Command-Line Tool?";
 
 "INSTALL_CLI_ALTERNATE_DESTINATION" = "Install to Alternate Destination…";
 "INSTALL_CLI" = "Install to “%@”";
 
-"INSTALL_CLI_WARNING_MESSAGE_TEXT" = "You already have a “%@” tool installed. Are you sure you want to overwrite it?";
-"INSTALL_CLI_WARNING_INFORMATIVE_TEXT" = "The tool was likely installed from the Terminal by running the “gem install cocoapods” command. If you wish to keep that installation intact, be sure to choose an alternate filename or directory (preferably in your Terminal PATH) for this tool.\n\nNote that you can always revert by running the aforementioned Terminal command again.";
+"INSTALL_CLI_WARNING_MESSAGE_TEXT" = "You already have `pod` at “%@”. Are you sure you want to overwrite it?";
+"INSTALL_CLI_FROM_GEM_INFORMATIVE_TEXT" = "Your `pod` command was installed via `gem install cocoapods`.\n\nClicking install will replace that version with the `pod` command hosted inside this app.\n\nNote that you can always revert back by running the Terminal commands again.";
+"INSTALL_CLI_WARNING_INFORMATIVE_TEXT" = "The tool was likely installed from the Terminal by running the “gem install cocoapods” command. \n\nIf you wish to keep that installation intact, be sure to choose an alternate filename or directory (preferably in your Terminal PATH) for this tool.\n\nNote that you can always revert by running the aforementioned Terminal command again.";
 "INSTALL_CLI_WARNING_OVERWRITE" = "Overwrite";
 
-"WORKSPACE_GENERATED_NOTIFICATION_TITLE" = "Pod Workspace Ready";
+"UNINSTALL_CLI_WARNING_MESSAGE_TEXT" = "Are you really sure you want to remove the Command-Line Tool?";
+"UNINSTALL_CLI_REMOVE" = "Yes, Remove!";
 
+"WORKSPACE_GENERATED_NOTIFICATION_TITLE" = "Pod Workspace Ready";
+"WORKSPACE_FAILED_GENERATION_NOTIFICATION_TITLE" = "Something Went Wrong";
+
+"CLOSE" = "Close";
 "CANCEL" = "Cancel";
+"EXIT" = "Exit";
 
 "PODFILE_WINDOW_VERBOSE_SWITCH_TITLE" = "Verbose";
 "PODFILE_WINDOW_POD_UPDATE_BUTTON_TITLE" = "Pod Update";
 "PODFILE_WINDOW_POD_INSTALL_BUTTON_TITLE" = "Pod Install";
+"PODFILE_WINDOW_PODFILE_SYNTAX_ERROR_REPLACE" = "your Podfile";
+
+"POD_DEINTEGRATE_INFO" = "Finished.";
+"POD_DEINTEGRATE_CONFIRMATION" = "CocoaPods has been removed from %@.";
 
 "POD_INSTALL_SHEET_COMPLETED_BUTTON_TITLE" = "Done";
 "POD_INSTALL_SHEET_IN_PROGRESS_BUTTON_TITLE" = "Cancel";
 
+"PODFILE_WINDOW_CONSOLE_HINT_EMPTY_PODFILE" = "Your Podfile seems empty...\nClick here for some inspiration";
+"PODFILE_WINDOW_CONSOLE_HINT_ERROR_PODFILE" = "Your Podfile may not be compilable";
+"PODFILE_WINDOW_CONSOLE_HINT_READY_PODFILE" = "Your Podfile is ready to go!\nHit install to see the outcome";
+"PODFILE_WINDOW_NEWER_LOCKFILE_ERROR" = "Your Podfile.lock was generated using a newer version of CocoaPods";
+"PODFILE_WINDOW_NEWER_LOCKFILE_ERROR_BUTTON_TITTLE" = "Check For Updates";
+
 "MAIN_WINDOW_TITLE" = "Welcome to CocoaPods";
-"MAIN_WINDOW_OPEN_GUIDES_BUTTON_TITLE" = "Open Guides";
-"MAIN_WINDOW_OPEN_SEARCH_BUTTON_TITLE" = "Open Search";
+"MAIN_WINDOW_OPEN_GUIDES_BUTTON_TITLE" = "Get started with CocoaPods";
+"MAIN_WINDOW_OPEN_SEARCH_BUTTON_TITLE" = "Search for Pods";
 "MAIN_WINDOW_CHANGELOG_BUTTON_TITLE" = "What's New?";
+"MAIN_WINDOW_OPEN_DOCUMENT_BUTTON_TITLE" = "Open an existing Podfile";
+
+"REPO_UPDATE_NOTIFICATION_TITLE" = "Repo Updated";
+"REPO_UPDATE_FAILED_NOTIFICATION_TITLE" = "Repo not Updated";
+
+"PLUGINS_INSTALLING_MESSAGE" = "Installing Plugins";
+"PLUGIN_FAILED_TO_INSTALL_MESSAGE" = "Failed to Install Plugins";
+"PLUGINS_ALL_INSTALLED_MESSAGE" = "Installed Plugins";
+
+"REINTEGRATION_ALERT_FORMAT_TITLE" = "Re-integration";
+"REINTEGRATION_ALERT_FORMAT_MESSAGE" = "CocoaPods is going to migrate your project from %@ to %@, this is considered a breaking change. To migrate, CocoaPods will re-install your integration from scratch, including re-downloading all Pods";
+"REINTEGRATION_ALERT_CONFIRM" = "Okay, lets do it";
+"REINTEGRATION_ALERT_CANCEL" = "Cancel";

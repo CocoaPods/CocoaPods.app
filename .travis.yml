@@ -1,0 +1,18 @@
+osx_image: xcode7.3
+language: objective-c
+
+env:
+  global:
+    - LANG=en_US.UTF-8
+
+branches:
+  only:
+    - master
+    - /.+-stable$/
+
+install:
+  - gem install danger
+  - danger
+  - rake app:prerequisites --quiet
+
+script: rake bundle:test --quiet

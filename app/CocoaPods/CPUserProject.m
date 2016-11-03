@@ -1,30 +1,18 @@
 #import "CPUserProject.h"
-
-#import <ANSIEscapeHelper/AMR_ANSIEscapeHelper.h>
-
-#import <objc/runtime.h>
-
-#import "CPANSIEscapeHelper.h"
-
 #import "CocoaPods-Swift.h"
-#import "RBObject+CocoaPods.h"
+#import "CPMiniPromise.h"
 
-@interface CPUserProject ()
+@interface CPUserProject () <CPMiniPromiseDelegate>
 @property (strong) NSStoryboard *storyboard;
-@end
-
-
-@interface CPUserProject ()
+@property (strong) CPMiniPromise *completionPromise;
 @end
 
 @implementation CPUserProject
 
-- (void)makeWindowControllers {
-  if (self.fileURL == nil) {
-    NSLog(@"HRM?");
-    return;
-  }
+@synthesize podfilePlugins=_podfilePlugins, xcodeIntegrationDictionary=_xcodeIntegrationDictionary;
 
+- (void)makeWindowControllers
+{
   self.storyboard = [NSStoryboard storyboardWithName:@"Podfile" bundle:nil];
 
   NSWindowController *windowController = [self.storyboard instantiateControllerWithIdentifier:@"Podfile Editor"];
@@ -32,10 +20,7 @@
   podfileVC.userProject = self;
 
   [self addWindowController:windowController];
-
 }
-
-
 
 #pragma mark - Persistance
 
@@ -55,5 +40,55 @@
   return [self.contents writeToURL:absoluteURL atomically:YES encoding:NSUTF8StringEncoding error:outError];
 }
 
+- (BOOL)shouldFulfillPromise:(CPMiniPromise *)promise
+{
+  return self.xcodeIntegrationDictionary && self.podfilePlugins;
+}
+
+- (void)registerForFullMetadataCallback:(void (^)(void))completion
+{
+  self.completionPromise = self.completionPromise ?: [CPMiniPromise promiseWithDelegate:self];
+
+  [self.completionPromise addBlock:completion];
+  [self.completionPromise checkForFulfillment];
+}
+
+- (void)setXcodeIntegrationDictionary:(NSDictionary *)xcodeIntegrationDictionary
+{
+  _xcodeIntegrationDictionary = xcodeIntegrationDictionary;
+  [self.completionPromise checkForFulfillment];
+}
+
+- (void)setPodfilePlugins:(NSArray<NSString *> *)podfilePlugins
+{
+  _podfilePlugins = podfilePlugins;
+  [self.completionPromise checkForFulfillment];
+}
+
+- (NSString * _Nullable)lockfilePath
+{
+  NSString *podfileURL = self.fileURL.relativePath;
+  NSString *lockfileURL = [podfileURL stringByAppendingString:@".lock"];
+  if ([[NSFileManager defaultManager] fileExistsAtPath:lockfileURL]) {
+    return lockfileURL;
+  }
+  return nil;
+}
+
+#pragma mark - NSFilePresenter
+
+- (void)presentedItemDidChange
+{
+  NSError *error;
+  [self readFromURL:self.fileURL ofType:self.fileType error:&error];
+  
+  if (!error) {
+    if ( [self.delegate respondsToSelector: @selector(contentDidChangeinUserProject:)] ) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate contentDidChangeinUserProject:self];
+      });
+    }
+  }
+}
 
 @end
