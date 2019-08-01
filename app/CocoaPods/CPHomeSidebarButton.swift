@@ -12,22 +12,22 @@ class CPHomeSidebarButton: NSButton {
   
   override func awakeFromNib() {
     // This is the title for deselected, e.g. NSOffState
-    self.attributedTitle =  NSAttributedString(title, color: NSColor(calibratedWhite: 0.8, alpha: 1), font: .labelFont(ofSize: 12), alignment: .center)
+    self.attributedTitle =  NSAttributedString(title, color: NSColor(calibratedWhite: 0.8, alpha: 1), font: .labelFontOfSize(12), alignment: .Center)
     
     // This alternate title is the attributes used when selected, e.g. NSOnState
     // `disabledControlTextColor` is used as this was the previous color for the selected state
-    self.attributedAlternateTitle = NSAttributedString(title, color: .disabledControlTextColor, font: .labelFont(ofSize: 12), alignment: .center)
+    self.attributedAlternateTitle = NSAttributedString(title, color: .disabledControlTextColor(), font: .labelFontOfSize(12), alignment: .Center)
   }
  
-  override func mouseDown(with theEvent: NSEvent) {
+  override func mouseDown(theEvent: NSEvent) {
     if userInteractionEnabled {
-      super.mouseDown(with: theEvent)
+      super.mouseDown(theEvent)
     }
   }
   
-  override func mouseUp(with theEvent: NSEvent) {
+  override func mouseUp(theEvent: NSEvent) {
     if userInteractionEnabled {
-      super.mouseUp(with: theEvent)
+      super.mouseUp(theEvent)
     }
   }
 

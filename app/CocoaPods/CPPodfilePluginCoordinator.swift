@@ -9,7 +9,7 @@ class CPPodfilePluginCoordinator: NSObject {
   var controller: CPPodfileViewController
   var pluginsToInstall = [String]()
 
-  func comparePluginsWithinUserProject(_ project: CPUserProject) {
+  func comparePluginsWithinUserProject(project: CPUserProject) {
     guard let reflection = NSApp.delegate as? CPAppDelegate else {
       return NSLog("App delegate not CPAppDelegate")
     }
@@ -19,44 +19,44 @@ class CPPodfilePluginCoordinator: NSObject {
 
     var podfilePlugins = [String]()
     var installedPlugins = [String]()
-    let group = DispatchGroup()
+    let group = dispatch_group_create()
 
     // Get the installed plugins
-    group.enter()
+    dispatch_group_enter(group)
     reflector.installedPlugins { plugins, error in
       installedPlugins = plugins ?? []
-      group.leave()
+      dispatch_group_leave(group)
     }
 
     // Get the plugins from the podfile
-    group.enter()
-    reflector.plugins(fromPodfile: project.contents) { plugins, error in
+    dispatch_group_enter(group)
+    reflector.pluginsFromPodfile(project.contents) { plugins, error in
       podfilePlugins = plugins ?? []
-      group.leave()
+      dispatch_group_leave(group)
     }
 
     // Once both asynchronous operations are completed
     // figure out if we have all the required gems
     // and if not, show the message
 
-    group.notify(queue: DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.high)) {
-      let shouldRecommendInstall = Set(installedPlugins).isSuperset(of: podfilePlugins) == false
+    dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+      let shouldRecommendInstall = Set(installedPlugins).isSupersetOf(podfilePlugins) == false
       if shouldRecommendInstall == false || podfilePlugins.count == 0 {
         return;
       }
 
       self.pluginsToInstall = podfilePlugins.filter { !installedPlugins.contains($0) }
 
-      DispatchQueue.main.async {
+      dispatch_async(dispatch_get_main_queue()) {
         let inflectedPlugin = (self.pluginsToInstall.count == 1) ? "plugin" : "plugins"
         self.controller.showWarningLabelWithSender("You need to install \(self.pluginsToInstall.count) \(inflectedPlugin) for this Podfile", actionTitle: "Install", target: self, action: #selector(CPPodfilePluginCoordinator.showInstaller), animated:true)
       }
     }
   }
 
-  @objc func showInstaller() {
+  func showInstaller() {
     guard let storyboard = controller.storyboard else { return }
-    guard let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "InstallPlugins")) as? NSWindowController else { return }
+    guard let windowController = storyboard.instantiateControllerWithIdentifier("InstallPlugins") as? NSWindowController else { return }
     guard let missingPluginInstaller = windowController.contentViewController as? CPInstallPluginsViewController else { return }
 
     missingPluginInstaller.pluginsToInstall = self.pluginsToInstall

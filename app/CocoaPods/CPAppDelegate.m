@@ -1,4 +1,5 @@
 #import "CPAppDelegate.h"
+#import "CPCLIToolInstallationController.h"
 #import "CPDebuggerCheck.h"
 #import "CPHomeWindowController.h"
 #import "CPReflectionServiceProtocol.h"

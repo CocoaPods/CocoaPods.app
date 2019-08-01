@@ -6,19 +6,19 @@ class CPSourceRepoCoordinator: NSObject {
 
   // When these two are true then the binding for enabled on the
   // popover button changes to true
-  @objc dynamic var reposNeedUpdating = false
-  @objc dynamic var hasAllCocoaPodsRepoSources = false
+  dynamic var reposNeedUpdating = false
+  dynamic var hasAllCocoaPodsRepoSources = false
 
   var checkTask: CPCLITask?
-  @objc dynamic var imageForShowReposPopover: NSImage?
+  dynamic var imageForShowReposPopover: NSImage?
 
   override func awakeFromNib() {
     super.awakeFromNib()
-    imageForShowReposPopover = NSImage(named: NSImage.Name(rawValue: "repo_update_not_ready"))
+    imageForShowReposPopover = NSImage(named: "repo_update_not_ready")
   }
 
   // Gets source repos, with an optional callback for the repos.
-  func getSourceRepos(_ callback: (([CPSourceRepo])->())? = nil) {
+  func getSourceRepos(callback: (([CPSourceRepo])->())? = nil) {
     guard let reflection = NSApp.delegate as? CPAppDelegate else {
       return NSLog("App delegate not CPAppDelegate")
     }
@@ -28,7 +28,7 @@ class CPSourceRepoCoordinator: NSObject {
 
     reflector.allCocoaPodsSources { sources, error in
       let unordered_sources =  sources.map { CPSourceRepo(name: $0.0, address: $0.1) }
-      self.allRepos = unordered_sources.sorted(by: self.cocoaPodsSpecSort)
+      self.allRepos = unordered_sources.sort(self.cocoaPodsSpecSort)
 
       self.hasAllCocoaPodsRepoSources = true
 
@@ -39,23 +39,23 @@ class CPSourceRepoCoordinator: NSObject {
   }
 
   // Moves the CP specs repo to the top, and then does alphabetical after that
-  func cocoaPodsSpecSort(_ lhs: CPSourceRepo, rhs: CPSourceRepo) -> Bool {
+  func cocoaPodsSpecSort(lhs: CPSourceRepo, rhs: CPSourceRepo) -> Bool {
     if lhs.isCocoaPodsSpecs { return true }
     if rhs.isCocoaPodsSpecs { return false }
-    return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == ComparisonResult.orderedAscending
+    return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == NSComparisonResult.OrderedAscending
   }
 
-  func checkWhetherProjectNeedsChanges(_ userProject: CPUserProject) {
-    checkTask = CPCLITask(userProject: userProject, command: "check", arguments: [], delegate: self, qualityOfService: .utility)
+  func checkWhetherProjectNeedsChanges(userProject: CPUserProject) {
+    checkTask = CPCLITask(userProject: userProject, command: "check", arguments: [], delegate: self, qualityOfService: .Utility)
     checkTask?.run()
   }
 }
 
 extension CPSourceRepoCoordinator: CPCLITaskDelegate {
-  func taskCompleted(_ task: CPCLITask!) {
+  func taskCompleted(task: CPCLITask!) {
     reposNeedUpdating = !task.finishedSuccessfully()
     let imageName = reposNeedUpdating ? "repo_update_not_ready" : "repo_update_needed"
-    imageForShowReposPopover = NSImage(named: NSImage.Name(rawValue: imageName))
+    imageForShowReposPopover = NSImage(named: imageName)
   }
 }
 
@@ -73,29 +73,29 @@ class CPSourceRepo: NSObject, CPCLITaskDelegate {
   }
 
   var displayName: String {
-    return isCocoaPodsSpecs ? "CocoaPods Public Specs" : name.capitalized
+    return isCocoaPodsSpecs ? "CocoaPods Public Specs" : name.capitalizedString
   }
 
   var displayAddress: String {
     return address
-      .replacingOccurrences(of: "https://", with: "")
-      .replacingOccurrences(of: "www.", with: "")
-      .replacingOccurrences(of: "git.", with: "")
-      .replacingOccurrences(of: "@git", with: "")
+      .stringByReplacingOccurrencesOfString("https://", withString: "")
+      .stringByReplacingOccurrencesOfString("www.", withString: "")
+      .stringByReplacingOccurrencesOfString("git.", withString: "")
+      .stringByReplacingOccurrencesOfString("@git", withString: "")
   }
 
-  @objc dynamic var isUpdatingRepo: Bool = false
+  dynamic var isUpdatingRepo: Bool = false
   var updateRepoTask: CPCLITask?
 
-  @IBAction func updateRepo(_ button: NSButton?) {
+  @IBAction func updateRepo(button: NSButton?) {
     self.isUpdatingRepo = true
 
-    updateRepoTask = CPCLITask(workingDirectory: NSTemporaryDirectory(), command: "repo update", arguments: [name], delegate: self, qualityOfService: .userInteractive)
+    updateRepoTask = CPCLITask(workingDirectory: NSTemporaryDirectory(), command: "repo update", arguments: [name], delegate: self, qualityOfService: .UserInteractive)
     updateRepoTask?.run()
   }
 
   var recentlyUpdated = false
-  func taskCompleted(_ task: CPCLITask!) {
+  func taskCompleted(task: CPCLITask!) {
     isUpdatingRepo = false
     recentlyUpdated = true
     
@@ -106,11 +106,11 @@ class CPSourceRepo: NSObject, CPCLITaskDelegate {
     }
   }
 
-  fileprivate func notifyWithTitle(_ title: String) {
+  private func notifyWithTitle(title: String) {
     let notification = NSUserNotification()
     notification.title = title
     notification.subtitle = displayName
-    NotificationCenter.default.post(name: Notification.Name(rawValue: "CPRepoUpdatedCompleted"), object: nil)
-    NSUserNotificationCenter.default.deliver(notification)
+    NSNotificationCenter.defaultCenter().postNotificationName("CPRepoUpdatedCompleted", object: nil)
+    NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification(notification)
   }
 }

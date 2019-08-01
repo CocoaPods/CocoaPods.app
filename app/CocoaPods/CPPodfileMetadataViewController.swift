@@ -8,10 +8,10 @@ class CPXcodeProject: NSObject {
   var targets = [CPXcodeTarget]()
   var integrationType = "Static Libraries"
   var fileName = "CocoaPods.xcodeproj"
-  var filePath = URL(fileURLWithPath: "")
+  var filePath = NSURL(fileURLWithPath: "")
   var plugins = [String]()
 
-  var image = NSImage(imageLiteralResourceName: "project")
+  var image = NSImage(imageLiteral: "project")
 }
 
 class CPXcodeTarget: NSObject {
@@ -45,25 +45,25 @@ class CPPodfileMetadataViewController: NSViewController {
   var infoGenerator = CPXcodeInformationGenerator()
     
   /// Allows us to bind a loading interface.
-  @objc dynamic var showingMetadata = false
+  dynamic var showingMetadata = false
 
   @IBOutlet var metadataDataSource: CPMetadataTableViewDataSource!
 
   override func viewWillAppear() {
     super.viewWillAppear()
 
-    guard let podfileVC = podfileViewController, let project = podfileVC.userProject else {
+    guard let podfileVC = podfileViewController, project = podfileVC.userProject else {
       return print("CPPodfileEditorViewController is not set up with a PodfileVC in the VC heirarchy.")
     }
 
     // When all XPC information has been recieved
-    project.register {
+    project.registerForFullMetadataCallback {
 
       // Take all podfile metadata dict and make it into the models above
       // this is done async, as it can be a bit of processing time.
-      self.infoGenerator.xcodeProjectMetadata(from: project) { (projects, targets, error) in
+      self.infoGenerator.XcodeProjectMetadataFromUserProject(project) { (projects, targets, error) in
 
-        DispatchQueue.main.async {
+        dispatch_async(dispatch_get_main_queue()) {
 
           // Stop showing loading
           self.showingMetadata = true
@@ -77,12 +77,12 @@ class CPPodfileMetadataViewController: NSViewController {
   }
 
   // Opens a pod page in safari
-  @IBAction func openPod(_ sender: NSButton) {
-    let row = metadataDataSource.tableView.row(for: sender)
-    guard let pod = metadataDataSource.tableView(metadataDataSource.tableView, objectValueFor: nil, row: row) as? CPPod else {
+  @IBAction func openPod(sender: NSButton) {
+    let row = metadataDataSource.tableView.rowForView(sender)
+    guard let pod = metadataDataSource.tableView(metadataDataSource.tableView, objectValueForTableColumn: nil, row: row) as? CPPod else {
       return print("Index was not a pod")
     }
 
-    CPExternalLinksHelper().openPod(withName: pod.name)
+    CPExternalLinksHelper().openPodWithName(pod.name)
   }
 }

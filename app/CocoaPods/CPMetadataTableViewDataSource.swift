@@ -7,13 +7,13 @@ class CPMetadataTableViewDataSource: NSObject, NSTableViewDataSource, NSTableVie
 
   @IBOutlet weak var tableView: NSTableView!
 
-  func setXcodeProjects(_ projects:[CPXcodeProject], targets:[CPCocoaPodsTarget]) {
+  func setXcodeProjects(projects:[CPXcodeProject], targets:[CPCocoaPodsTarget]) {
     flattenedXcodeProject = flattenXcodeProjects(projects, targets:targets)
     tableView.reloadData()
   }
 
   // TODO: I bet someone could code-golf this pretty well
-  fileprivate func flattenXcodeProjects(_ projects:[CPXcodeProject], targets:[CPCocoaPodsTarget]) -> [AnyObject] {
+  private func flattenXcodeProjects(projects:[CPXcodeProject], targets:[CPCocoaPodsTarget]) -> [AnyObject] {
     var flattenedObjects: [AnyObject] = []
 
     for xcodeproject in projects {
@@ -29,46 +29,46 @@ class CPMetadataTableViewDataSource: NSObject, NSTableViewDataSource, NSTableVie
             }
           }
         }
-        flattenedObjects.append("spacer" as AnyObject)
+        flattenedObjects.append("spacer")
       }
     }
     return flattenedObjects
   }
 
   // Nothing is selectable except the buttons
-  func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+  func tableView(tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
     return false
   }
 
-  func numberOfRows(in tableView: NSTableView) -> Int {
+  func numberOfRowsInTableView(tableView: NSTableView) -> Int {
     return flattenedXcodeProject.count
   }
 
   // Allows the UI to be set up via bindings
-  func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+  func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
     return flattenedXcodeProject[row]
   }
 
-  func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+  func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
     let data = flattenedXcodeProject[row]
     if let xcodeproj = data as? CPXcodeProject {
-      return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "xcodeproject_metadata"), owner: xcodeproj)
+      return tableView.makeViewWithIdentifier("xcodeproject_metadata", owner: xcodeproj)
 
     } else if let target = data as? CPXcodeTarget {
-      return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "target_metadata"), owner: target)
+      return tableView.makeViewWithIdentifier("target_metadata", owner: target)
 
     } else if let pod = data as? CPPod {
-      return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "pod_metadata"), owner: pod)
+      return tableView.makeViewWithIdentifier("pod_metadata", owner: pod)
 
     } else if let _ = data as? NSString {
-      return tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "spacer"), owner: nil)
+      return tableView.makeViewWithIdentifier("spacer", owner: nil)
     }
 
     print("Should not have data unaccounted for in the flattened xcode project", terminator: "");
     return nil
   }
 
-  func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+  func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
     let data = flattenedXcodeProject[row]
     if let _ = data as? CPXcodeProject {
       return 120

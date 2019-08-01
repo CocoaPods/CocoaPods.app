@@ -1,5 +1,5 @@
 extension String {
   func trim() -> String {
-    return trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+    return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
   }
 }

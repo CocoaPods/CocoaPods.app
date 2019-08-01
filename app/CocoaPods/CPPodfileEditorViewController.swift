@@ -13,9 +13,9 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
   let indentationSyntax = "  "
 
   var autoCompletions: [String] = {
-    if let path = Bundle.main.path(forResource: "Podfile", ofType: "plist"),
-      let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-      let words = dict["autocompleteWords"] as? [String] {
+    if let path = NSBundle.mainBundle().pathForResource("Podfile", ofType: "plist"),
+      dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
+      words = dict["autocompleteWords"] as? [String] {
         return words
     }
     return []
@@ -28,10 +28,10 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
     super.viewDidLoad()
 
     let appDelegate = NSApp.delegate as? CPAppDelegate
-    (appDelegate?.reflectionService.remoteObjectProxy as! CPReflectionServiceProtocol).allPods { (pods, error) in
+    appDelegate?.reflectionService.remoteObjectProxy.allPods { (pods, error) in
 
       guard let pods = pods else { return }
-      self.allPodNames.append(contentsOf: pods)
+      self.allPodNames.appendContentsOf(pods)
     }
   }
 
@@ -41,16 +41,16 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
   override func viewWillAppear() {
     super.viewWillAppear()
 
-    guard let podfileVC = podfileViewController, let project = podfileVC.userProject else {
+    guard let podfileVC = podfileViewController, project = podfileVC.userProject else {
       return print("CPPodfileEditorViewController is not set up with a PodfileVC in the VC heirarchy.")
     }
     
     project.delegate = self
     editor.becomeFirstResponder()
 
-    editor.isSyntaxColoured = true
+    editor.syntaxColoured = true
     editor.syntaxDefinitionName = "Podfile"
-    editor.string = project.contents as NSString
+    editor.string = project.contents
 
     editor.autoCompleteEnabled = true
     editor.autoCompleteDelay = 0.05
@@ -74,7 +74,7 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
     project.undoManager = editor.textView.undoManager
     
     syntaxChecker = CPPodfileReflection(podfileEditorVC: self, fragariaEditor: editor)
-    syntaxChecker.textDidChange(Notification(name: Notification.Name(rawValue: ""), object: nil))
+    syntaxChecker.textDidChange(NSNotification(name: "", object: nil))
   }
 
   override func viewDidAppear() {
@@ -86,8 +86,8 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
     if let lockfilePath = podfileViewController?.userProject.lockfilePath() {
       pullVersionFromLockfile(lockfilePath, completion: { version in
         self.checkForOlderAppVersionWithLockfileVersion(version, completion: { older in
-          if let old = older, old.boolValue == true {
-            OperationQueue.main.addOperation({ () -> Void in
+          if let old = older where old.boolValue == true {
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
               self.showWarningForNewerLockfile()
             })
           }
@@ -101,18 +101,18 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
   }
 
   func appVersion() -> String? {
-    return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    return NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String
   }
 
-  func pullVersionFromLockfile(_ path: String, completion: @escaping (String?) -> Void) {
-    (appDelegate()?.reflectionService.remoteObjectProxy as! CPReflectionServiceProtocol).version(fromLockfile: path, withReply: { (version, error) in
+  func pullVersionFromLockfile(path: String, completion: (String?) -> Void) {
+    appDelegate()?.reflectionService.remoteObjectProxy.versionFromLockfile(path, withReply: { (version, error) in
       completion(version)
     })
   }
 
-  func checkForOlderAppVersionWithLockfileVersion(_ version: String?, completion: @escaping (NSNumber?) -> Void) {
-    if let lockfileVersion = version, let appVersion = appVersion() {
-        (appDelegate()?.reflectionService.remoteObjectProxy as! CPReflectionServiceProtocol).appVersion(appVersion, isOlderThanLockfileVersion: lockfileVersion, withReply: { (result, error) in
+  func checkForOlderAppVersionWithLockfileVersion(version: String?, completion: (NSNumber?) -> Void) {
+    if let lockfileVersion = version, appVersion = appVersion() {
+        appDelegate()?.reflectionService.remoteObjectProxy.appVersion(appVersion, isOlderThanLockfileVersion: lockfileVersion, withReply: { (result, error) in
           completion(result)
         })
     } else {
@@ -126,9 +126,9 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
     podfileViewController?.showWarningLabelWithSender(message, actionTitle: title, target: self, action: #selector(checkForUpdatesButtonPressed), animated: true)
   }
 
-  @objc func checkForUpdatesButtonPressed() {
-    if let url = URL(string: "https://cocoapods.org/app") {
-      NSWorkspace.shared.open(url)
+  func checkForUpdatesButtonPressed() {
+    if let url = NSURL(string: "https://cocoapods.org/app") {
+      NSWorkspace.sharedWorkspace().openURL(url)
     }
   }
   
@@ -139,29 +139,29 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
       let startingSelection = editor.textView.selectedRange()
       let range = selectedLinesRange(editor.textView)
       let cursorPosition = startingSelection.location - range.location
-      return (line as NSString).substring(to: cursorPosition)
+      return (line as NSString).substringToIndex(cursorPosition)
     }
   }
 
   var cursorIsInsidePodQuote: Bool {
     guard let stringBefore = linePrefix else { return false }
-    if stringBefore.contains("pod") == false { return false }
-    return stringBefore.components(separatedBy: "'").count == 2 ||
-           stringBefore.components(separatedBy: "\"").count == 2
+    if stringBefore.containsString("pod") == false { return false }
+    return stringBefore.componentsSeparatedByString("'").count == 2 ||
+           stringBefore.componentsSeparatedByString("\"").count == 2
   }
   
   var cursorIsInsidePodVersionQuote: Bool {
     guard let stringBefore = linePrefix else { return false }
     
-    if stringBefore.contains("pod") == false { return false }
-    return stringBefore.components(separatedBy: "'").count == 4 ||
-      stringBefore.components(separatedBy: "\"").count == 4
+    if stringBefore.containsString("pod") == false { return false }
+    return stringBefore.componentsSeparatedByString("'").count == 4 ||
+      stringBefore.componentsSeparatedByString("\"").count == 4
   }
   
   func selectedLinePodName() -> String? {
     guard let line = selectedLines(editor.textView).first else { return nil }
     
-    let components = line.components(separatedBy: "'")
+    let components = line.componentsSeparatedByString("'")
     if components.count >= 2 {
       return components[1]
     } else {
@@ -177,11 +177,11 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
     }
   }
   
-  func fetchPodVersions(_ podName: String, completion: @escaping ([String]) -> ()) {
+  func fetchPodVersions(podName: String, completion: [String] -> ()) {
     let appDelegate = NSApp.delegate as? CPAppDelegate
     
     if let reflectionServiceProxy = appDelegate?.reflectionService.remoteObjectProxy as? CPReflectionServiceProtocol {
-      reflectionServiceProxy.versions(forPodNamed: podName) { (vs, error) in
+      reflectionServiceProxy.versionsForPodNamed(podName) { (vs, error) in
         guard let vs = vs else { dump(error); return }
         completion(vs.map { "~> \($0)" })
       }
@@ -190,25 +190,25 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
 
   var cursorInComment: Bool {
     guard let line = selectedLines(editor.textView).first else { return false }
-    let trimmed = line.trimmingCharacters(in: CharacterSet.whitespaces)
+    let trimmed = line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 
-    return (trimmed as NSString).substring(to: 1) == "#"
+    return (trimmed as NSString).substringToIndex(1) == "#"
   }
 
-  func completions() -> [Any]! {
+  func completions() -> [AnyObject]! {
     switch (cursorInComment, cursorIsInsidePodQuote, cursorIsInsidePodVersionQuote) {
     case (true, _, _):
       return []
     case (_, true, _):
-      return allPodNames as [Any]
+      return allPodNames
     case (_, _, true):
-      return selectedLinePodVersions as [Any]
+      return selectedLinePodVersions
     default:
-      return autoCompletions as [Any]
+      return autoCompletions
     }
   }
 
-  func textDidChange(_ notification: Notification) {
+  func textDidChange(notification: NSNotification) {
     guard
       let textView = notification.object as? NSTextView,
       let podfileVC = podfileViewController else { return }
@@ -219,37 +219,37 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
     syntaxChecker.textDidChange(notification)
   }
   
-  func textViewDidChangeSelection(_ notification: Notification) {
-    guard let textView = notification.object as? NSTextView, textView == editor.textView else { return }
-    DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+  func textViewDidChangeSelection(notification: NSNotification) {
+    guard let textView = notification.object as? NSTextView where textView == editor.textView else { return }
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
       self.updateAutocompletionsIfNeeded()
     }
   }
 
-  @IBAction func commentSelection(_ sender: NSMenuItem) {
+  @IBAction func commentSelection(sender: NSMenuItem) {
     let selection = selectedLines(editor.textView)
     let change = commentsInSelection(selection) ? removeCommentsFromLines : addCommentsInLines
     let range = applyTextChange(change, toSelection: selection)
     editor.textView.setSelectedRange(NSMakeRange(range.location + range.length, 0))
   }
 
-  @IBAction func indentSelection(_ sender: NSMenuItem) {
+  @IBAction func indentSelection(sender: NSMenuItem) {
     let range = applyTextChange(indentedSelection, toSelection: selectedLines(editor.textView))
     editor.textView.setSelectedRange(range)
   }
 
-  @IBAction func outdentSelection(_ sender: NSMenuItem) {
+  @IBAction func outdentSelection(sender: NSMenuItem) {
     let range = applyTextChange(outdentedSelection, toSelection: selectedLines(editor.textView))
     editor.textView.setSelectedRange(range)
   }
   
-  @IBAction func increaseFontSize(_ sender: NSMenuItem) {
+  @IBAction func increaseFontSize(sender: NSMenuItem) {
     let settings = CPFontAndColourGateKeeper()
     settings.increaseDefaultFontSize()
     editor.textFont = settings.defaultFont!
   }
   
-  @IBAction func decreaseFontSize(_ sender: NSMenuItem) {
+  @IBAction func decreaseFontSize(sender: NSMenuItem) {
     let settings = CPFontAndColourGateKeeper()
     settings.decreaseDefaultFontSize()
     editor.textFont = settings.defaultFont!
@@ -263,11 +263,11 @@ class CPPodfileEditorViewController: NSViewController, NSTextViewDelegate, SMLAu
   /// - parameter selection: an array of Strings representing the lines of the selection
   /// - returns: NSRange
 
-  func applyTextChange(_ change: (([String]) -> [String]), toSelection selection: [String]) -> NSRange {
+  func applyTextChange(change: ([String] -> [String]), toSelection selection: [String]) -> NSRange {
     let startingSelection = editor.textView.selectedRange()
     let linesSelection = selectedLinesRange(editor.textView)
     let processed = change(selection)
-    let newText = "\(processed.joined(separator: "\n"))\n"
+    let newText = "\(processed.joinWithSeparator("\n"))\n"
 
     editor.textView.setSelectedRange(linesSelection)
     editor.textView.insertText(newText)
@@ -297,9 +297,9 @@ extension Indentation {
   /// - parameter lines: an array of strings representing the user's selection
   /// - returns: [String]
 
-  func indentedSelection(_ selection: [String]) -> [String] {
+  func indentedSelection(selection: [String]) -> [String] {
     return selection.map { line in
-      return line.replacingCharacters(in: line.startIndex ..< line.startIndex, with: indentationSyntax)
+      return line.stringByReplacingCharactersInRange(line.startIndex ..< line.startIndex, withString: indentationSyntax)
     }
   }
 
@@ -309,11 +309,11 @@ extension Indentation {
   /// - parameter lines: an array of strings representing the user's selection
   /// - returns: [String]
 
-  func outdentedSelection(_ selection: [String]) -> [String] {
-    let indent = try! NSRegularExpression(pattern: "^\t|^\\s{1,2}", options: .caseInsensitive)
+  func outdentedSelection(selection: [String]) -> [String] {
+    let indent = try! NSRegularExpression(pattern: "^\t|^\\s{1,2}", options: .CaseInsensitive)
     return selection.map { line in
-      let firstMatch = indent.rangeOfFirstMatch(in: line, options: .anchored, range: NSMakeRange(0, line.characters.count))
-      return firstMatch.location != NSNotFound ? (line as NSString).replacingCharacters(in: firstMatch, with: "") : line
+      let firstMatch = indent.rangeOfFirstMatchInString(line, options: .Anchored, range: NSMakeRange(0, line.characters.count))
+      return firstMatch.location != NSNotFound ? (line as NSString).stringByReplacingCharactersInRange(firstMatch, withString: "") : line
     }
   }
 
@@ -328,11 +328,11 @@ extension Commenting {
   /// - parameter selection: an array of strings representing the user's selection
   /// - returns: Bool
 
-  func commentsInSelection(_ selection: [String]) -> Bool {
-    let regex = try! NSRegularExpression(pattern: "\\s*#\\s*", options: .caseInsensitive)
+  func commentsInSelection(selection: [String]) -> Bool {
+    let regex = try! NSRegularExpression(pattern: "\\s*#\\s*", options: .CaseInsensitive)
 
     return selection.reduce(true) { (all, line) -> Bool in
-      return regex.matches(in: line, options: .anchored, range: NSMakeRange(0, line.characters.count)).count > 0 && all
+      return regex.matchesInString(line, options: .Anchored, range: NSMakeRange(0, line.characters.count)).count > 0 && all
     }
   }
 
@@ -342,11 +342,11 @@ extension Commenting {
   /// - parameter lines: an array of strings representing the user's selection
   /// - returns: [String]
 
-  func removeCommentsFromLines(_ lines: [String]) -> [String] {
-    let comment = try! NSRegularExpression(pattern: "#\\s?", options: .caseInsensitive)
+  func removeCommentsFromLines(lines: [String]) -> [String] {
+    let comment = try! NSRegularExpression(pattern: "#\\s?", options: .CaseInsensitive)
     return lines.map { line in
-      let firstMatch = comment.rangeOfFirstMatch(in: line, options: .anchored, range: NSMakeRange(0, line.characters.count))
-      return (line as NSString).replacingCharacters(in: firstMatch, with: "")
+      let firstMatch = comment.rangeOfFirstMatchInString(line, options: .Anchored, range: NSMakeRange(0, line.characters.count))
+      return (line as NSString).stringByReplacingCharactersInRange(firstMatch, withString: "")
     }
   }
 
@@ -356,9 +356,9 @@ extension Commenting {
   /// - parameter lines: an array of strings representing the user's selection
   /// - returns: [String]
 
-  func addCommentsInLines(_ lines: [String]) -> [String] {
+  func addCommentsInLines(lines: [String]) -> [String] {
     return lines.map { line in
-      return line.replacingCharacters(in: line.startIndex ..< line.startIndex, with: commentSyntax)
+      return line.stringByReplacingCharactersInRange(line.startIndex ..< line.startIndex, withString: commentSyntax)
     }
   }
 
@@ -374,11 +374,11 @@ extension EditorLineSelection {
   /// - parameter textView: the `NSTextView` containing the selection
   /// - returns: [String]
 
-  func selectedLines(_ textView: NSTextView) -> [String] {
-    guard let selection = selectedLinesText(textView), selection.characters.count > 0 else { return [] }
+  func selectedLines(textView: NSTextView) -> [String] {
+    guard let selection = selectedLinesText(textView) where selection.characters.count > 0 else { return [] }
 
     // The substring is required to filter out the empty last line returned otherwise
-    return selection.substring(to: selection.characters.index(before: selection.endIndex)).components(separatedBy: "\n")
+    return selection.substringToIndex(selection.endIndex.predecessor()).componentsSeparatedByString("\n")
   }
 
   /// Returns the text for the selected lines. It includes partially selected lines of text.
@@ -386,10 +386,10 @@ extension EditorLineSelection {
   /// - parameter textView: the `NSTextView` containing the selection
   /// - returns: String?
 
-  func selectedLinesText(_ textView: NSTextView) -> String? {
-    let text = textView.string
+  func selectedLinesText(textView: NSTextView) -> String? {
+    guard let text = textView.string else { return .None }
 
-    return (text as NSString).substring(with: selectedLinesRange(textView))
+    return (text as NSString).substringWithRange(selectedLinesRange(textView))
   }
 
   /// Returns the selected text's range
@@ -397,10 +397,10 @@ extension EditorLineSelection {
   /// - parameter textView: the `NSTextView` containing the selection
   /// - returns: NSRange
 
-  func selectedLinesRange(_ textView: NSTextView) -> NSRange {
-    let text = textView.string
+  func selectedLinesRange(textView: NSTextView) -> NSRange {
+    guard let text = textView.string else { return NSMakeRange(0, 0) }
 
-    return (text as NSString).lineRange(for: editor.textView.selectedRange())
+    return (text as NSString).lineRangeForRange(editor.textView.selectedRange())
   }
 
 }
@@ -408,21 +408,21 @@ extension EditorLineSelection {
 // MARK: - CPUserProjectDelegate
 extension CPPodfileEditorViewController: CPUserProjectDelegate {
   
-  func contentDidChangeinUserProject(_ userProject: CPUserProject) {
-    let contentChanged = editor.string as String != userProject.contents
-    let appIsActive = NSApplication.shared.isActive
+  func contentDidChangeinUserProject(userProject: CPUserProject) {
+    let contentChanged = editor.string != userProject.contents
+    let appIsActive = NSApplication.sharedApplication().active
 
     if contentChanged && !appIsActive {
       let selection = editor.textView.selectedRange()
       let scroll = editor.scrollView.visibleRect
 
-      editor.string = userProject.contents as NSString
+      editor.string = userProject.contents
 
       editor.textView.selectedRange = selection
-      editor.scrollView.scroll(scroll.origin)
+      editor.scrollView.scrollPoint(scroll.origin)
     }
     
     // Passing the message on to the syntax checker
-    syntaxChecker.textDidChange(Notification(name: Notification.Name(rawValue: ""), object: nil))
+    syntaxChecker.textDidChange(NSNotification(name: "", object: nil))
   }
 }

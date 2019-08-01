@@ -9,7 +9,7 @@ class URLHandler: NSObject {
     let eventClass = AEEventClass(kInternetEventClass)
     let eventId = AEEventID(kAEGetURL)
     
-    let manager = NSAppleEventManager.shared()
+    let manager = NSAppleEventManager.sharedAppleEventManager()
     manager.setEventHandler(
       self,
       andSelector: #selector(handleEvent(_:withReply:)),
@@ -18,9 +18,9 @@ class URLHandler: NSObject {
     )
   }
   
-  @objc func handleEvent(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+  func handleEvent(event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
     let key = AEKeyword(keyDirectObject)
-    let url = event.paramDescriptor(forKeyword: key)?.stringValue
+    let url = event.paramDescriptorForKeyword(key)?.stringValue
     print("Handled URL: \(url)", terminator: "")
   }
   

@@ -1,8 +1,8 @@
 import Cocoa
 
 enum InstallActionType {
-  case install(options: InstallOptions)
-  case update(options: InstallOptions)
+  case Install(options: InstallOptions)
+  case Update(options: InstallOptions)
 }
 
 struct InstallOptions {
@@ -18,36 +18,36 @@ struct InstallOptions {
 class CPInstallAction: NSObject, CPCLITaskDelegate {
   let userProject: CPUserProject
   let notify: Bool
-  @objc dynamic var taskAttributedString: NSAttributedString?
-  @objc dynamic var task: CPCLITask?
+  dynamic var taskAttributedString: NSAttributedString?
+  dynamic var task: CPCLITask?
 
   init(userProject: CPUserProject, notify: Bool) {
     self.userProject = userProject
     self.notify = notify
   }
 
-  func performAction(_ type: InstallActionType) {
+  func performAction(type: InstallActionType) {
     switch type {
-    case .install(let options):
+    case .Install(let options):
       executeTaskWithCommand("install", args: options.commandOptions)
-    case .update(let options):
+    case .Update(let options):
       executeTaskWithCommand("update", args: options.commandOptions)
     }
   }
 
-  fileprivate func executeTaskWithCommand(_ command: String, args: [String]) {
-    task = CPCLITask(userProject: userProject, command: command, arguments: args, delegate: self, qualityOfService: .userInitiated)
+  private func executeTaskWithCommand(command: String, args: [String]) {
+    task = CPCLITask(userProject: userProject, command: command, arguments: args, delegate: self, qualityOfService: .UserInitiated)
     guard let task = task else { return }
 
     task.colouriseOutput = true
     task.run()
   }
 
-  func task(_ task: CPCLITask!, didUpdateOutputContents updatedOutput: NSAttributedString!) {
+  func task(task: CPCLITask!, didUpdateOutputContents updatedOutput: NSAttributedString!) {
     self.taskAttributedString = updatedOutput
   }
 
-  func taskCompleted(_ task: CPCLITask!) {
+  func taskCompleted(task: CPCLITask!) {
     if (notify) {
       if task.finishedSuccessfully() {
         notifyWithTitle(~"WORKSPACE_GENERATED_NOTIFICATION_TITLE")
@@ -57,13 +57,13 @@ class CPInstallAction: NSObject, CPCLITaskDelegate {
     }
   }
 
-  fileprivate func notifyWithTitle(_ title: String) {
+  private func notifyWithTitle(title: String) {
     let notification = NSUserNotification()
     notification.title = title
     if let path = userProject.fileURL?.relativePath {
-      notification.subtitle = (path as NSString).abbreviatingWithTildeInPath
+      notification.subtitle = (path as NSString).stringByAbbreviatingWithTildeInPath
     }
-    NotificationCenter.default.post(name: Notification.Name(rawValue: "CPInstallCompleted"), object: nil)
-    NSUserNotificationCenter.default.deliver(notification)
+    NSNotificationCenter.defaultCenter().postNotificationName("CPInstallCompleted", object: nil)
+    NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification(notification)
   }
 }

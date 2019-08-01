@@ -2,7 +2,7 @@ import Cocoa
 
 class CPPodfileConsoleTextView: NSTextView {
   
-  @objc dynamic var hasText: Bool = false //Currently bound to the hidden property of the console hint button
+  dynamic var hasText: Bool = false //Currently bound to the hidden property of the console hint button
   
   // We bind to `attributedText`, not `attributedString` in the storyboard, this is
   // to allow us to calculate the previous scroll position before setting the new
@@ -29,7 +29,7 @@ class CPPodfileConsoleTextView: NSTextView {
       if (scrolledToBottom) {
         self.scrollToEndOfDocument(self)
       } else {
-        self.scroll(self.visibleRect.origin)
+        self.scrollPoint(self.visibleRect.origin)
       }
     }
   }

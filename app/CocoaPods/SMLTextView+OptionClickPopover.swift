@@ -3,7 +3,7 @@ import WebKit
 
 extension SMLTextView {
   
-  fileprivate struct AssociatedKeys {
+  private struct AssociatedKeys {
     static var optionClickPopover = "org.cocoapods.CocoaPods.optionClickPopover"
     static var selectedPodRange = "org.cocoapods.CocoaPods.selectedPodRange"
     static var hoveredPodRange = "org.cocoapods.CocoaPods.hoveredPodRange"
@@ -50,25 +50,25 @@ extension SMLTextView {
   }
   
   
-  open override func mouseMoved(with theEvent: NSEvent) {
-    super.mouseMoved(with: theEvent)
+  public override func mouseMoved(theEvent: NSEvent) {
+    super.mouseMoved(theEvent)
     
-    guard theEvent.modifierFlags.contains(NSEvent.ModifierFlags.option) else {
+    guard theEvent.modifierFlags.contains(.AlternateKeyMask) else {
       return
     }
     processPodMouseHover()
   }
   
-  open override func mouseDown(with theEvent: NSEvent) {
-    super.mouseDown(with: theEvent)
+  public override func mouseDown(theEvent: NSEvent) {
+    super.mouseDown(theEvent)
     
-    guard theEvent.modifierFlags.contains(NSEvent.ModifierFlags.option) else {
+    guard theEvent.modifierFlags.contains(.AlternateKeyMask) else {
       return
     }
-    quickLook(with: theEvent)
+    quickLookWithEvent(theEvent)
   }
   
-  open override func quickLook(with event: NSEvent) {
+  public override func quickLookWithEvent(event: NSEvent) {
     guard let pod = checkForPodNameBelowMouseLocation() else {
       optionClickPopover?.close()
       return
@@ -81,8 +81,8 @@ extension SMLTextView {
     selectedPodRange = pod.location
   }
   
-  open override func flagsChanged(with theEvent: NSEvent) {
-    if theEvent.modifierFlags.contains(NSEvent.ModifierFlags.option) {
+  public override func flagsChanged(theEvent: NSEvent) {
+    if theEvent.modifierFlags.contains(.AlternateKeyMask) {
       processPodMouseHover()
       isOptionKeyDown = true
       
@@ -92,10 +92,10 @@ extension SMLTextView {
       isOptionKeyDown = false
     }
     
-    super.flagsChanged(with: theEvent)
+    super.flagsChanged(theEvent)
   }
   
-  fileprivate func processPodMouseHover() {
+  private func processPodMouseHover() {
     removeUnderlineStyle(forPodAtRange: hoveredPodRange)
     hoveredPodRange = nil
     
@@ -109,13 +109,18 @@ extension SMLTextView {
     }
   }
   
-  fileprivate func checkForPodNameBelowMouseLocation() -> (podName: String, location: NSRange)? {    
-    let hoveredCharIndex = characterIndex(for: NSEvent.mouseLocation)
-    let lineRange = (string as NSString).lineRange(for: NSRange(location: hoveredCharIndex, length: 0))
-    let line = (string as NSString).substring(with: lineRange)
+  private func checkForPodNameBelowMouseLocation() -> (podName: String, location: NSRange)? {
+    guard let string = string else {
+      return nil
+    }
+    
+    let hoveredCharIndex = characterIndexForPoint(NSEvent.mouseLocation())
+    let lineRange = (string as NSString).lineRangeForRange(NSRange(location: hoveredCharIndex, length: 0))
+    let line = (string as NSString).substringWithRange(lineRange)
     let hoveredCharLineIndex = hoveredCharIndex - lineRange.location
     
-    guard let hoveredChar = (line as NSString).substring(from: hoveredCharLineIndex).characters.first, hoveredChar != "\n" && hoveredChar != "'" && hoveredChar != "\"" && hoveredCharLineIndex > 0 else {
+    guard let hoveredChar = (line as NSString).substringFromIndex(hoveredCharLineIndex).characters.first
+      where hoveredChar != "\n" && hoveredChar != "'" && hoveredChar != "\"" && hoveredCharLineIndex > 0 else {
         return nil
     }
     
@@ -126,7 +131,7 @@ extension SMLTextView {
     // Iterate to the right of the text line in search of the first occurrence of a " or '
     // →
     let rightSideRange = NSRange(location: hoveredCharLineIndex, length: line.characters.count - hoveredCharLineIndex)
-    for (index, char) in (line as NSString).substring(with: rightSideRange).characters.enumerated() {
+    for (index, char) in (line as NSString).substringWithRange(rightSideRange).characters.enumerate() {
       if char == "'" || char == "\"" {
         podEndIndex = hoveredCharLineIndex + index
         break
@@ -136,7 +141,7 @@ extension SMLTextView {
     // Iterate to the left of the text line in search of the first occurence of a " or '
     // ←
     let leftSideRange = NSRange(location: 0, length: hoveredCharLineIndex)
-    for (index, char) in (line as NSString).substring(with: leftSideRange).characters.reversed().enumerated() {
+    for (index, char) in (line as NSString).substringWithRange(leftSideRange).characters.reverse().enumerate() {
       if char == "'" || char == "\"" {
         podStartIndex = hoveredCharLineIndex - index
         break
@@ -144,7 +149,7 @@ extension SMLTextView {
     }
     
     guard podStartIndex >= 0 && podEndIndex >= 0 &&
-      (line as NSString).substring(with: NSRange(location: 0, length: podStartIndex - 1)).trim().hasSuffix("pod") else {
+      (line as NSString).substringWithRange(NSRange(location: 0, length: podStartIndex - 1)).trim().hasSuffix("pod") else {
         return nil
     }
     
@@ -152,8 +157,8 @@ extension SMLTextView {
     // gets the autocompletions from the `CPPodfileEditorViewController`
     setSelectedRange(NSRange(location: hoveredCharIndex, length: 0))
     
-    let podName = (line as NSString).substring(with: NSRange(location: podStartIndex, length: podEndIndex - podStartIndex))
-    guard let _ = autoCompleteDelegate.completions().index(where: { ($0 as? String) == podName }) else {
+    let podName = (line as NSString).substringWithRange(NSRange(location: podStartIndex, length: podEndIndex - podStartIndex))
+    guard let _ = autoCompleteDelegate.completions().indexOf({ ($0 as? String) == podName }) else {
       return nil
     }
     
@@ -161,24 +166,24 @@ extension SMLTextView {
     return (podName, podNameRange)
   }
   
-  fileprivate func updateUnderlineStyle(forPodAtRange range: NSRange) {
+  private func updateUnderlineStyle(forPodAtRange range: NSRange) {
     textStorage?.beginEditing()
     textStorage?.addAttributes([
-      NSAttributedStringKey.underlineStyle: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue as Int),
-      NSAttributedStringKey.underlineColor: CPFontAndColourGateKeeper().cpLinkRed
+      NSUnderlineStyleAttributeName: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue),
+      NSUnderlineColorAttributeName: CPFontAndColourGateKeeper().cpLinkRed
       ], range: range)
     textStorage?.endEditing()
   }
   
-  fileprivate func removeUnderlineStyle(forPodAtRange range: NSRange?) {
+  private func removeUnderlineStyle(forPodAtRange range: NSRange?) {
     guard let range = range else { return }
     
     textStorage?.beginEditing()
-    textStorage?.removeAttribute(NSAttributedStringKey.underlineStyle, range: range)
+    textStorage?.removeAttribute(NSUnderlineStyleAttributeName, range: range)
     textStorage?.endEditing()
   }
   
-  fileprivate func resetUnderlineStyles() {
+  private func resetUnderlineStyles() {
     removeUnderlineStyle(forPodAtRange: hoveredPodRange)
     hoveredPodRange = nil
     
@@ -186,12 +191,12 @@ extension SMLTextView {
     selectedPodRange = nil
   }
   
-  fileprivate func showPodPopover(forPodWithName podName: String, atRange: NSRange) {
-    guard let window = window,
-      let podURL = URL(string: "https://cocoapods.org/pods/\(podName)") else {
+  private func showPodPopover(forPodWithName podName: String, atRange: NSRange) {
+    guard let window = window, let string = string,
+      let podURL = NSURL(string: "https://cocoapods.org/pods/\(podName)"),
+      let customCSSFilePath = NSBundle.mainBundle().resourcePath?.stringByAppendingString("/CocoaPods.css") else {
         return
     }
-    let customCSSFilePath = (Bundle.main.resourcePath)! + "/CocoaPods.css"
     
     optionClickPopover?.close()
     
@@ -199,45 +204,45 @@ extension SMLTextView {
     webView.wantsLayer = true
     webView.policyDelegate = self
     webView.preferences.userStyleSheetEnabled = true
-    webView.preferences.userStyleSheetLocation = URL(fileURLWithPath: customCSSFilePath)
-    webView.mainFrame.load(URLRequest(url: podURL))
+    webView.preferences.userStyleSheetLocation = NSURL(fileURLWithPath: customCSSFilePath)
+    webView.mainFrame.loadRequest(NSURLRequest(URL: podURL))
     
     let popoverViewController = NSViewController()
     popoverViewController.view = webView
     
-    var podNameRect = firstRect(forCharacterRange: atRange, actualRange: nil)
-    podNameRect = window.convertFromScreen(podNameRect)
-    podNameRect = convert(podNameRect, to: nil)
+    var podNameRect = firstRectForCharacterRange(atRange, actualRange: nil)
+    podNameRect = window.convertRectFromScreen(podNameRect)
+    podNameRect = convertRect(podNameRect, toView: nil)
     podNameRect.size.width = 1
     
     // We use the width of the range starting at the beginning of the line until the middle of the pod name
     // as the x coordinate for the popover (the popover is always centered to the pod name, no matter
     // where the option-click/three finger tap occurred)
-    let lineRange = (string as NSString).lineRange(for: atRange)
+    let lineRange = (string as NSString).lineRangeForRange(atRange)
     let startToMiddlePodRange =
       NSRange(location: lineRange.location,
               length: atRange.location - lineRange.location + atRange.length / 2 + (atRange.length % 2 == 0 ? 0 : 1))
-    podNameRect.origin.x = firstRect(forCharacterRange: startToMiddlePodRange, actualRange: nil).width
+    podNameRect.origin.x = firstRectForCharacterRange(startToMiddlePodRange, actualRange: nil).width
 
     let popover = NSPopover()
     popover.contentViewController = popoverViewController
-    popover.behavior = .transient
+    popover.behavior = .Transient
     popover.delegate = self
-    popover.show(relativeTo: podNameRect, of: self, preferredEdge: .maxY)
+    popover.showRelativeToRect(podNameRect, ofView: self, preferredEdge: .MaxY)
     
     optionClickPopover = popover
   }
   
-  open override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
+  public override func shouldChangeTextInRange(affectedCharRange: NSRange, replacementString: String?) -> Bool {
     resetUnderlineStyles()
-    return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
+    return super.shouldChangeTextInRange(affectedCharRange, replacementString: replacementString)
   }
 }
 
 // MARK: - NSPopoverDelegate
 extension SMLTextView: NSPopoverDelegate {
 
-  public func popoverWillClose(_ notification: Notification) {
+  public func popoverWillClose(notification: NSNotification) {
     resetUnderlineStyles()
   }
 }
@@ -245,13 +250,13 @@ extension SMLTextView: NSPopoverDelegate {
 // MARK: - WebPolicyDelegate
 extension SMLTextView: WebPolicyDelegate {
   
-  public func webView(_ webView: WebView!, decidePolicyForNavigationAction actionInformation: [AnyHashable: Any]!,
-                      request: URLRequest!, frame: WebFrame!, decisionListener listener: WebPolicyDecisionListener!) {
+  public func webView(webView: WebView!, decidePolicyForNavigationAction actionInformation: [NSObject : AnyObject]!,
+                      request: NSURLRequest!, frame: WebFrame!, decisionListener listener: WebPolicyDecisionListener!) {
     if let _ = actionInformation?[WebActionElementKey],
-      let externalURL = actionInformation[WebActionOriginalURLKey] as? URL {
+      let externalURL = actionInformation[WebActionOriginalURLKey] as? NSURL {
       // An action has ocurred (link click): redirect the user to the browser
       listener.ignore()
-      NSWorkspace.shared.open(externalURL)
+      NSWorkspace.sharedWorkspace().openURL(externalURL)
     } else {
       // Loading the CocoaPods pod page: accept
       listener.use()

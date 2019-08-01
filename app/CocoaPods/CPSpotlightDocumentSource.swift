@@ -16,46 +16,46 @@ class CPSpotlightDocumentSource: CPDocumentSource {
   }
 
   func start() {
-    let notificationCenter = NotificationCenter.default
-    notificationCenter.addObserver(self, selector: #selector(queryUpdated(_:)), name: NSNotification.Name.NSMetadataQueryDidUpdate, object: self.query)
-    notificationCenter.addObserver(self, selector: #selector(queryGatheringFinished(_:)), name: NSNotification.Name.NSMetadataQueryDidFinishGathering, object: self.query)
+    let notificationCenter = NSNotificationCenter.defaultCenter()
+    notificationCenter.addObserver(self, selector: #selector(queryUpdated(_:)), name: NSMetadataQueryDidUpdateNotification, object: self.query)
+    notificationCenter.addObserver(self, selector: #selector(queryGatheringFinished(_:)), name: NSMetadataQueryDidFinishGatheringNotification, object: self.query)
 
     query.predicate = NSPredicate(format: "kMDItemFSName == 'Podfile'", argumentArray: nil)
     query.sortDescriptors = [NSSortDescriptor(key: kMDItemContentModificationDate as String, ascending: true)]
     query.searchScopes = [NSMetadataQueryIndexedLocalComputerScope]
     query.valueListAttributes = [NSMetadataItemPathKey]
 
-    query.start()
+    query.startQuery()
   }
 
-  @objc func queryUpdated(_ notification: Notification) {
+  func queryUpdated(notification: NSNotification) {
     query.disableUpdates()
 
     guard let podfileMetadatas = notification.userInfo?[kMDQueryUpdateAddedItems] as? [NSMetadataItem] else { return }
 
     spotlightDocuments = podfileMetadatas.flatMap {
-      guard let path = $0.value(forAttribute: NSMetadataItemPathKey) as? String else { return nil }
-      let url = URL(fileURLWithPath: path)
-      return CPHomeWindowDocumentEntry(url: url)
+      guard let path = $0.valueForAttribute(NSMetadataItemPathKey) as? String else { return nil }
+      let url = NSURL(fileURLWithPath: path)
+      return CPHomeWindowDocumentEntry(URL: url)
     }
 
     query.enableUpdates()
     
-    NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(queryFinished), object: nil)
+    NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(queryFinished), object: nil)
     queryFinished()
   }
 
-  @objc func queryGatheringFinished(_ notification: Notification) {
+  func queryGatheringFinished(notification: NSNotification) {
     // let NSMetadataQuery finish when there are files available, if not finish the query
-    self.perform(#selector(CPSpotlightDocumentSource.queryFinished), with: nil, afterDelay: 2.0)
+    self.performSelector(#selector(CPSpotlightDocumentSource.queryFinished), withObject: nil, afterDelay: 2.0)
   }
   
-  @objc func queryFinished() {
-    let notificationCenter = NotificationCenter.default
+  func queryFinished() {
+    let notificationCenter = NSNotificationCenter.defaultCenter()
     notificationCenter.removeObserver(self)
-    query.stop()
+    query.stopQuery()
 
-    if (query.isStopped) {
+    if (query.stopped) {
       self.delegate?.documentSourceDidUpdate(self, documents: documents)
     }
   }

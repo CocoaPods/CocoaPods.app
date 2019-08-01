@@ -6,23 +6,23 @@ class CPThickDecorationsWindow: NSWindow {
 
   /// We want to offset the window buttons to make them centered.
 
-  override func makeKeyAndOrderFront(_ sender: Any?) {
+  override func makeKeyAndOrderFront(sender: AnyObject?) {
     titlebarAppearsTransparent = true
-    isMovableByWindowBackground = true
-    titleVisibility = .hidden
+    movableByWindowBackground = true
+    titleVisibility = .Hidden
 
     super.makeKeyAndOrderFront(sender)
 
-    [NSWindow.didResizeNotification, NSWindow.didMoveNotification].forEach { notification in
-      NotificationCenter.default.addObserver(self, selector: #selector(moveWindowButtons), name: notification, object: self)
+    [NSWindowDidResizeNotification, NSWindowDidMoveNotification].forEach { notification in
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(moveWindowButtons), name: notification, object: self)
     }
     moveWindowButtons()
   }
 
-  @objc func moveWindowButtons(){
+  func moveWindowButtons(){
     let verticalOffset: CGFloat = 12
 
-    ([.closeButton, .miniaturizeButton, .zoomButton] as [NSWindow.ButtonType]).forEach { type in
+    ([.CloseButton, .MiniaturizeButton, .ZoomButton] as [NSWindowButton]).forEach { type in
       guard let button = standardWindowButton(type) else { return }
       button.setFrameOrigin(NSMakePoint(button.frame.origin.x, verticalOffset))
     }

@@ -1,14 +1,14 @@
 import Foundation
 
 enum CPPodfileErrorState {
-  case emptyFile
-  case syntaxError
+  case EmptyFile
+  case SyntaxError
   
   init?(fromProject project: CPUserProject) {
     if project.contents.isEmpty {
-      self = .emptyFile
+      self = .EmptyFile
     } else if project.syntaxErrors.count > 0 {
-      self = .syntaxError
+      self = .SyntaxError
     } else {
       return nil
     }

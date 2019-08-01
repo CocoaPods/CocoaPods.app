@@ -11,27 +11,27 @@ class CPSparkleDelegate: NSObject, SUUpdaterDelegate {
     updateMenuItem()
   }
 
-  @IBAction func toggleSparkleUpdates(_ button: AnyObject) {
-    let defaults = UserDefaults.standard
-    let disabled = defaults.bool(forKey: disableKey)
-    defaults.set(!disabled, forKey: disableKey)
+  @IBAction func toggleSparkleUpdates(button: AnyObject) {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    let disabled = defaults.boolForKey(disableKey)
+    defaults.setBool(!disabled, forKey: disableKey)
     defaults.synchronize()
 
     updateMenuItem()
   }
 
   func updateMenuItem() {
-    let defaults = UserDefaults.standard
-    if defaults.bool(forKey: disableKey) {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    if defaults.boolForKey(disableKey) {
       toggleSparkleMenuItem.title = "Re-enable Sparkle Updates"
     } else {
       toggleSparkleMenuItem.title = "Disable Sparkle Updates"
     }
   }
 
-  func updaterMayCheck(forUpdates updater: SUUpdater!) -> Bool {
-    let defaults = UserDefaults.standard
-    let disabled = defaults.bool(forKey: disableKey)
+  func updaterMayCheckForUpdates(updater: SUUpdater!) -> Bool {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    let disabled = defaults.boolForKey(disableKey)
     return !disabled
   }
 

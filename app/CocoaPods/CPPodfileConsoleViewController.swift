@@ -4,7 +4,7 @@ class CPPodfileConsoleViewController: NSViewController, NSTextViewDelegate {
   @IBOutlet var textView: NSTextView!
   @IBOutlet weak var hintButton: NSButton!
 
-  @objc dynamic var editable = false // the textview in the storyboard is bound to this
+  dynamic var editable = false // the textview in the storyboard is bound to this
     
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -16,59 +16,59 @@ class CPPodfileConsoleViewController: NSViewController, NSTextViewDelegate {
   override func viewWillAppear() {
     super.viewWillAppear()
     
-    guard let podfileVC = podfileViewController, let project = podfileVC.userProject else {
+    guard let podfileVC = podfileViewController, project = podfileVC.userProject else {
       return print("CPPodfileEditorViewController is not set up with a PodfileVC in the VC heirarchy.")
     }
     
-    if textView.string.isEmpty {
-      hintButton.isHidden = false
+    if textView.string!.isEmpty {
+      hintButton.hidden = false
       if let podfileErrorState = CPPodfileErrorState(fromProject: project) {
         switch podfileErrorState {
-        case .emptyFile:
+        case .EmptyFile:
           updateHintButton(imageNamed: "emptyPodfile", title: ~"PODFILE_WINDOW_CONSOLE_HINT_EMPTY_PODFILE")
-        case .syntaxError:
+        case .SyntaxError:
           updateHintButton(imageNamed: "errorPodfile", title: ~"PODFILE_WINDOW_CONSOLE_HINT_ERROR_PODFILE")
         }
       } else {
         updateHintButton(imageNamed: "compiledPodfile", title: ~"PODFILE_WINDOW_CONSOLE_HINT_READY_PODFILE")
       }
     } else {
-      hintButton.isHidden = true
+      hintButton.hidden = true
     }
   }
   
   // MARK: - Hints
     
-  func updateHintButton(imageNamed: String, title: String) {
-    hintButton.image = NSImage(named: NSImage.Name(rawValue: imageNamed))
-    hintButton.alternateImage = NSImage(named: NSImage.Name(rawValue: "\(imageNamed)_selected"))
-    hintButton.attributedTitle = NSAttributedString(title, color: NSColor.ansiMutedWhite(), font: NSFont.labelFont(ofSize: 13), alignment: .center)
-    hintButton.attributedAlternateTitle = NSAttributedString(title, color: NSColor.ansiBrightWhite(), font: NSFont.labelFont(ofSize: 13), alignment: .center)
+  func updateHintButton(imageNamed imageNamed: String, title: String) {
+    hintButton.image = NSImage(named: imageNamed)
+    hintButton.alternateImage = NSImage(named: "\(imageNamed)_selected")
+    hintButton.attributedTitle = NSAttributedString(title, color: NSColor.ansiMutedWhite(), font: NSFont.labelFontOfSize(13), alignment: .Center)
+    hintButton.attributedAlternateTitle = NSAttributedString(title, color: NSColor.ansiBrightWhite(), font: NSFont.labelFontOfSize(13), alignment: .Center)
   }
   
-  @IBAction func hintButton(_ sender: AnyObject) {
-    guard let podfileVC = podfileViewController, let project = podfileVC.userProject else {
+  @IBAction func hintButton(sender: AnyObject) {
+    guard let podfileVC = podfileViewController, project = podfileVC.userProject else {
         return print("CPPodfileEditorViewController is not set up with a PodfileVC in the VC heirarchy.")
     }
     
     if let podfileErrorState = CPPodfileErrorState(fromProject: project) {
       switch podfileErrorState {
-      case .emptyFile:
+      case .EmptyFile:
         let externalLinksHelper = CPExternalLinksHelper()
         externalLinksHelper.openSearch(sender)
         
-      case .syntaxError:
+      case .SyntaxError:
         podfileVC.showEditorTab(sender)
       }
     } else {
-      hintButton.isHidden = true
+      hintButton.hidden = true
       podfileVC.install(sender)
     }
   }
   
   // MARK: - TextView
   
-  func textView(_ textView: NSTextView, willChangeSelectionFromCharacterRanges oldSelectedCharRanges: [NSValue], toCharacterRanges newSelectedCharRanges: [NSValue]) -> [NSValue] {
+  func textView(textView: NSTextView, willChangeSelectionFromCharacterRanges oldSelectedCharRanges: [NSValue], toCharacterRanges newSelectedCharRanges: [NSValue]) -> [NSValue] {
 
     // Determine if we're at the tail of the output log (and should scroll) before we append more to it.
 
@@ -83,7 +83,7 @@ class CPPodfileConsoleViewController: NSViewController, NSTextViewDelegate {
     if (scrolledToBottom) {
       textView.scrollToEndOfDocument(self)
     } else {
-      textView.scroll(visibleRect.origin)
+      textView.scrollPoint(visibleRect.origin)
     }
 
     return newSelectedCharRanges
