@@ -36,6 +36,12 @@ $ open app/CocoaPods.xcworkspace
 > $ git clone git@github.com:CocoaPods/Specs.git ~/.cocoapods/repos/master --depth=1
 > ```
 
+> Having an issue with `ruby/config.h` not found on OS X Mojave/Catalina? You need to install the SDK Headers by running the following:
+>
+> ```sh
+> $ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+> ```
+
 This will set up your environment with a compiled versions of: ruby, git, cocoapods (the gem), hg, openssl, etc into both `destroot` and `workbench`.
 
 ### Rake Tasks
