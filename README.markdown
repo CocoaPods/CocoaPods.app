@@ -30,6 +30,12 @@ $ rake app:prerequisites --quiet
 $ open app/CocoaPods.xcworkspace
 ```
 
+> Having an issue with running `rake app:rerequisities --quiet`? You might need to fork the CocoaPods/Specs repository locally to your computer. To do this simply run the following command:
+>
+> ```sh
+> $ git clone git@github.com:CocoaPods/Specs.git ~/.cocoapods/repos/master --depth=1
+> ```
+
 This will set up your environment with a compiled versions of: ruby, git, cocoapods (the gem), hg, openssl, etc into both `destroot` and `workbench`.
 
 ### Rake Tasks
